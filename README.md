@@ -12,3 +12,4 @@ Day 2
 
 - Designed Movie Details
 - Setup Tailwind
+- Sign Up Page

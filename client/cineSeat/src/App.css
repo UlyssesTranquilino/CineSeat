@@ -1,8 +1,9 @@
 @import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+@custom-variant light (&:where(.light, .light *));
 
 #root {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto 0 auto;
   text-align: center;
 }
@@ -12,8 +13,15 @@ html {
 }
 
 body {
-  background-color: black;
   font-family: "Roboto", sans-serif;
+}
+
+body.dark {
+  background-color: black;
+}
+
+body.light {
+  background-color: white;
 }
 
 .red-gradient {
@@ -22,4 +30,9 @@ body {
     rgba(253, 21, 19, 0.6) 0%,
     rgba(22, 22, 22, 0) 50%
   );
+}
+
+/* Sign Up */
+form input {
+  height: 35px;
 }

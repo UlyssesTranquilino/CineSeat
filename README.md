@@ -13,3 +13,9 @@ Day 2
 - Designed Movie Details
 - Setup Tailwind
 - Sign Up Page
+
+Day 3
+
+- Backend
+- Added Database
+- Store Showing Movies

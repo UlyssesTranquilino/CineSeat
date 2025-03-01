@@ -22,3 +22,18 @@ export const useTheme = create<Theme>()(
     }
   )
 );
+
+export const useMovieStore = create((set) => ({
+  movies: [],
+  setMovies: (movies: any) => set({ movies }),
+  fetchMovies: async () => {
+    try {
+      const res = await fetch("http://localhost:5000");
+      const data = await res.json();
+
+      set({ movies: data.data });
+    } catch (error) {
+      console.error("Failed to fetch movies: ", error);
+    }
+  },
+}));

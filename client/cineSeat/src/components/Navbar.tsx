@@ -40,7 +40,7 @@ const Navbar = () => {
           {isDarkMode ? (
             <LightModeOutlinedIcon className="pages  hover:text-yellow-500  light:hover:text-[#3c73ff] transition-colors duration-200" />
           ) : (
-            <DarkModeOutlinedIcon className="pages light:hover:text-[#3c73ff] transition-colors duration-200" />
+            <DarkModeOutlinedIcon className="pages light:hover:text-blue-800 transition-colors duration-200" />
           )}
         </div>
       </div>
@@ -74,9 +74,9 @@ const Navbar = () => {
           {/* Theme Toggle in Drawer */}
           <div onClick={toggleTheme} className="cursor-pointer">
             {isDarkMode ? (
-              <LightModeOutlinedIcon className="text-white pages hover:text-yellow-500  light:hover:text-[#3c73ff] transition-colors duration-200" />
+              <LightModeOutlinedIcon className="text-white pages hover:text-yellow-500   transition-colors duration-200" />
             ) : (
-              <DarkModeOutlinedIcon className="pages light:text-black light:hover:text-[#FD1513] transition-colors duration-200" />
+              <DarkModeOutlinedIcon className="pages light:text-black light:hover:text-blue-800 transition-colors duration-200" />
             )}
           </div>
         </div>

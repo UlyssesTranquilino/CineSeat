@@ -1,8 +1,14 @@
 import { useState, useEffect } from "react";
 import { useMovieStore } from "../global/mode";
 
+//Components
+import MoviesCarousel from "../components/Home/MoviesCarousel";
+
 const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [carouselMovies, setCarouselMovies] = useState<any[]>([]);
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const { movies, fetchMovies } = useMovieStore() as {
     movies: any[];
     fetchMovies: () => void;
@@ -17,11 +23,13 @@ const HomePage = () => {
 
   useEffect(() => {
     console.log("Movies updated: ", movies);
+    setCarouselMovies(movies.slice(0, 8));
+    setIsSuccess(true);
   }, [movies]);
 
   return (
     <div className="text-white light:text-black">
-      <div></div>HomePage MOvies
+      {isSuccess && movies.length > 0 && <MoviesCarousel />}
     </div>
   );
 };

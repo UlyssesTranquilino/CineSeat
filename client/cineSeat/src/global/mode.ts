@@ -9,31 +9,45 @@ interface Theme {
 export const useTheme = create<Theme>()(
   persist(
     (set, get) => ({
-      isDarkMode: true, // Default to dark mode
+      isDarkMode: true,
       toggleTheme: () => {
-        const newMode = !get().isDarkMode;
-        set({ isDarkMode: newMode });
+        set({ isDarkMode: !get().isDarkMode });
       },
     }),
     {
-      name: "theme-storage", // Key name in localStorage
+      name: "theme-storage",
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({ isDarkMode: state.isDarkMode }),
     }
   )
 );
 
-export const useMovieStore = create((set) => ({
-  movies: [],
-  setMovies: (movies: any) => set({ movies }),
-  fetchMovies: async () => {
-    try {
-      const res = await fetch("http://localhost:5000");
-      const data = await res.json();
+export const useMovieStore = create(
+  persist(
+    (set, get) => ({
+      movies: [],
+      lastFetched: 0,
+      setMovies: (movies: any) => set({ movies, lastFetched: Date.now() }),
+      fetchMovies: async () => {
+        const TEN_MINUTES = 10 * 60 * 1000;
+        if (Date.now() - get().lastFetched < TEN_MINUTES) return; // Avoid frequent fetching
 
-      set({ movies: data.data });
-    } catch (error) {
-      console.error("Failed to fetch movies: ", error);
+        try {
+          const res = await fetch("http://localhost:5000");
+          const data = await res.json();
+
+          set({ movies: data.data, lastFetched: Date.now() });
+        } catch (error) {
+          console.error("Failed to fetch movies: ", error);
+        }
+      },
+    }),
+    {
+      name: "movie-storage",
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        movies: state.movies,
+        lastFetched: state.lastFetched,
+      }),
     }
-  },
-}));
+  )
+);

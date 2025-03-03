@@ -28,11 +28,24 @@ body.light {
   background: radial-gradient(
     circle,
     rgba(253, 21, 19, 0.6) 0%,
-    rgba(22, 22, 22, 0) 50%
+    rgb(0, 0, 0) 50%
   );
 }
 
 /* Sign Up */
 form input {
   height: 35px;
+}
+
+.slick-dots li button:before,
+.slick-dots li.slick-active button:before {
+  color: white;
+}
+
+.slick-dots li button:before {
+  color: red;
+}
+
+.slick-dots li.slick-active button:before {
+  color: blue;
 }

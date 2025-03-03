@@ -3,6 +3,7 @@ import { useMovieStore } from "../global/mode";
 
 //Components
 import MoviesCarousel from "../components/Home/MoviesCarousel";
+import NowShowing from "./NowShowing";
 
 const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -30,6 +31,7 @@ const HomePage = () => {
   return (
     <div className="text-white light:text-black">
       {isSuccess && movies.length > 0 && <MoviesCarousel />}
+      <NowShowing />
     </div>
   );
 };

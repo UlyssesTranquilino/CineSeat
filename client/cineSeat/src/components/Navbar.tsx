@@ -19,7 +19,7 @@ const Navbar = () => {
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
   return (
-    <nav className="flex items-center justify-between px-2 h-14  text-white light:text-black">
+    <nav className="flex items-center justify-between px-2 h-14  text-white light:text-black  ">
       <Link to="/">
         <div className="flex items-center gap-2">
           <img src={Logo} alt="CineSeat Logo" className="w-10" />
@@ -28,7 +28,7 @@ const Navbar = () => {
       </Link>
 
       {/* Desktop Navigation */}
-      <div className="hidden sm:flex items-center gap-5">
+      <div className="hidden sm:flex items-center gap-5 ">
         <Link to="/signup">
           <h1 className="border-[#FD1513] hover:border-b-1">Sign up</h1>
         </Link>

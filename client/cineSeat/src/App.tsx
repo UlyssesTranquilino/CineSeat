@@ -29,7 +29,7 @@ function App() {
   }, [isDarkMode]);
 
   return (
-    <div className="px-3 w-full max-w-[1200px] mx-autolight:text-black">
+    <div className="px-3 w-full max-w-[1200px] mx-autolight:text-black ">
       <Navbar />
       <div className="relative z-1 ">
         <Routes>

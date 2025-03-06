@@ -1,6 +1,6 @@
 # CineSeat
 
-##Day 1
+**Day 1**
 
 - FInd API (took a lotttt of time)
 - Find inspos
@@ -8,32 +8,16 @@
 - Create Repo
 - Setup
 
-Day 2
+**Day 2**
 
 - Designed Movie Details
 - Setup Tailwind
 - Sign Up Page
 
-Day 3
+**Day 3**
 
 - Light and Dark Mode
 - Backend
 - Added Database
 - Store Showing Movies
 
-Day 4
-
-- Fetching Movies
-
-Day 5
-
-- Carousel
-
-Day 6
-
-- Fix Carousel
-
-Day 7
-
--Fix genres Id's to actual genre name
--added genres to now showing section

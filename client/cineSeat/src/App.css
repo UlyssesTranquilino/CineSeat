@@ -49,3 +49,12 @@ form input {
 .slick-dots li.slick-active button:before {
   color: blue;
 }
+
+.slick-dots li button:before {
+  color: white !important;
+  transform: translateY(-40px);
+}
+
+.slick-dots li.slick-active button:before {
+  color: white !important;
+}

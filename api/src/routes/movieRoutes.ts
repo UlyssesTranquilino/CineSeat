@@ -1,9 +1,8 @@
 import express from "express";
 import { getMovies, getMovieById } from "../controllers/movieController";
 
-const router = express.Router();
+const movieRouter = express.Router();
 
-router.get("/", getMovies);
-router.get("/:id", getMovieById);
+movieRouter.get("/", getMovies);
 
-export default router;
+export default movieRouter;

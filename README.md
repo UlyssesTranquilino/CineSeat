@@ -16,11 +16,8 @@
 
 **Day 3**
 
+- Light and Dark Mode
 - Backend
 - Added Database
 - Store Showing Movies
 
-**Day 4**
-- Global Fetch of Movies
-- Global Variable for all movies
-- Setup Homepage Data

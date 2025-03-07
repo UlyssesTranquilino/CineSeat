@@ -50,7 +50,7 @@ form input {
   color: blue;
 }
 
-.slick-dots li button:before {
+.movie-carousel .slick-dots li button:before {
   color: white !important;
   transform: translateY(-40px);
 }

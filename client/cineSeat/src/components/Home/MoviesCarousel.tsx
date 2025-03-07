@@ -22,15 +22,15 @@ const MoviesCarousel = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full rounded-sm movie-carousel">
       <Slider {...settings}>
         {movies.slice(0, 5).map((movie) => (
           <div
             key={movie._id}
-            className="relative h-70 md:h-100 bg-black overflow-hidden"
+            className="relative h-70 md:h-100 bg-black overflow-hidden rounded-md"
           >
             <div
-              className="absolute  w-60 h-80 md:100 md:w-200 pl-20 z-1 flex flex-col gap-10  justify-center pb-8"
+              className="absolute  w-60 md:100 md:w-200 pl-20 z-1 flex flex-col gap-10  justify-center pb-8 h-full"
               style={{
                 background:
                   "linear-gradient(90deg, rgba(0,0,0,1) 20%, rgba(66,94,136,0) 100%)",
@@ -46,7 +46,7 @@ const MoviesCarousel = () => {
             <img
               src={movie.backdropUrl}
               alt={movie._title}
-              className="object-cover md:pl-60 opacity-50"
+              className="object-cover md:pl-60 opacity-50 h-full w-full"
             />
           </div>
         ))}

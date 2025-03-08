@@ -58,3 +58,13 @@ form input {
 .slick-dots li.slick-active button:before {
   color: white !important;
 }
+
+/* Next Slider Button */
+/* Ensure next button is visible in light mode */
+.light button.slick-arrow.slick-prev::before {
+  color: rgb(66, 66, 66) !important;
+}
+
+.light button.slick-arrow.slick-next::before {
+  color: rgb(66, 66, 66) !important;
+}

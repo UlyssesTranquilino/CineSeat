@@ -11,6 +11,8 @@ import Navbar from "./components/Navbar";
 
 //HomePage
 import HomePage from "./pages/HomePage";
+//Movie Details
+import MovieDetails from "./pages/MovieDetails";
 
 import { useTheme } from "./global/mode";
 
@@ -36,6 +38,7 @@ function App() {
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<HomePage />} />
+          <Route path="/movie/:id" element={<MovieDetails />} />
         </Routes>
       </div>
       {isDarkMode && <CircleGradient />}

@@ -151,6 +151,38 @@ const getBiasedRating = () => {
   return (Math.pow(Math.random(), 0.5) * 9 + 1).toFixed(1); // Generates 1 decimal place
 };
 
+const addReviewCount = async () => {
+  try {
+    const movies = await Movie.find({});
+
+    for (const movie of movies) {
+      if (!Array.isArray(movie.genre)) {
+        console.warn(`⚠️ Skipping "${movie.title}" - genre field is invalid.`);
+        continue;
+      }
+
+      // Generate a random review count between 0 and 300
+      const randomReview = Math.floor(Math.random() * 300);
+
+      // Update only the reviewCount in the rating field
+      await Movie.updateOne(
+        { _id: movie._id },
+        { $set: { "rating.reviewsCount": randomReview } } // Update the reviewsCount only
+      );
+
+      console.log(
+        `✅ Updated review count for "${movie.title}" to ${randomReview}`
+      );
+    }
+
+    console.log("Review counts updated for all movies.");
+  } catch (error) {
+    console.error("❌ Error updating review counts:", error);
+  } finally {
+    mongoose.connection.close();
+  }
+};
+
 const updateMoviesWithRating = async () => {
   try {
     const movies = await Movie.find({}); // Fetch all movies
@@ -225,4 +257,4 @@ const updateMoviesWithGenres = async () => {
 };
 
 // Run the script
-export default updateMoviesWithGenres;
+export default addReviewCount;

@@ -37,3 +37,20 @@ Day 7
 
 -Fix genres Id's to actual genre name
 -added genres to now showing section
+
+Day 8
+
+- Now Showing
+- Add Categories Filter working
+
+Day 9
+
+-Movie Details Single Page
+-Add route
+-Fix light mode next and prev button in categories
+
+Day 10
+
+-Movie Banner Details
+-No yet responsive
+-Added review count in api

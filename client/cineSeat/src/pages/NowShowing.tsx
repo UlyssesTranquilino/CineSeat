@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useMovieStore } from "../global/mode";
 import Rating from "@mui/material/Rating";
@@ -7,11 +7,28 @@ import Slider from "react-slick";
 const NowShowing = () => {
   const { movies }: { movies: any } = useMovieStore();
 
+  const [width, setWidth] = useState(window.innerWidth);
+
+  // Update width on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    // Attach resize event listener
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []); // Empty dependency array ensures this runs only once
+
   const settings = {
     dots: true,
     infinite: false,
     speed: 500,
-    slidesToShow: 7,
+    slidesToShow: width <= 720 ? 3 : 7,
     slidesToScroll: 3,
     rows: 2,
     indicators: false,

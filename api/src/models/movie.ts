@@ -25,6 +25,7 @@ const MovieSchema = new mongoose.Schema({
   rating: {
     value: { type: Number, min: 1, max: 10 }, // Decimal rating between 1 and 10
     source: { type: String, default: "Generated" }, // Default source
+    reviewsCount: { type: Number, default: 0 },
   },
 });
 

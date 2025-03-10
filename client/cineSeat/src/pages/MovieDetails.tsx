@@ -29,10 +29,22 @@ const MovieDetails = () => {
   return (
     <div>
       {isSuccess ? (
-        <div>
-          <div className="bg-black rounded-md overflow-hidden relative text-left md:h-140 ">
-            <div className="absolute z-2 pl-[8%] pt-[5%] sm:pl-15 sm:pt-30">
-              <h1 className="text-2xl sm:text-4xl font-bold w-40 sm:w-80 text-left">
+        <div className="light:text-black">
+          <div className=" rounded-md overflow-hidden relative text-left  h-55 sm:h-70 md:h-90 lg:h-100 ">
+            <div
+              className="absolute inset-0 left-10 z-4 "
+              style={{
+                backgroundImage: `url(${movie.backdropUrl})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                opacity: 1, // Adjust opacity here (0 to 1)
+                zIndex: -1, // Ensure the background is behind the content
+              }}
+            />
+
+            <div className="absolute inset-0 bg-black opacity-50"></div>
+            <div className="absolute z-2 pl-[8%] pt-[5%] sm:pl-15 sm:pt-12 md:pt-17">
+              <h1 className="text-2xl sm:text-4xl font-bold w-40 sm:w-80 text-left text-white">
                 {movie.title}
               </h1>
               <div className="flex items-center justify-start gap-[1px] -translate-x-1 sm:translate-x-4 sm:scale-110 sm:mt-1">
@@ -59,7 +71,7 @@ const MovieDetails = () => {
                 <p>2h and 3m</p>
               </div>
 
-              <div className="flex items-center text-[13px] sm:text-[15px]">
+              <div className="text-white flex items-center text-[13px] sm:text-[15px]">
                 {movie.genre.map((genre: string, index: number) => (
                   <p key={genre} className="pr-1">
                     {genre}
@@ -73,13 +85,30 @@ const MovieDetails = () => {
               </button>
             </div>
 
-            <div className="bg-gradient-to-r from-black to-transparent absolute z-1 h-full w-60 sm:w-80 md:w-160"></div>
+            <div className="bg-gradient-to-r from-black to-transparent absolute z-1 h-full w-60 sm:w-100 md:w-160"></div>
 
-            <img
+            {/* <img
               src={movie.backdropUrl}
               alt={movie.title}
-              className="opacity-40 rounded-md ml-10 md:ml-25"
-            />
+              className="opacity-40 rounded-md ml-10 md:ml-25 imgBanner"
+            /> */}
+          </div>
+
+          <div className="px-5">
+            <h1 className="font-bold text-left mt-20 sm:text-xl md:text-2xl ">
+              About the Movie
+            </h1>
+
+            <div className="mt-10 flex flex-col sm:flex-row justify-between gap-1 ">
+              <p className="text-left text-md md:text-lg max-w-195">
+                {movie.description}
+              </p>
+              <img
+                src={movie.posterUrl}
+                alt={movie.title}
+                className="w-50 rounded-md md:w-60"
+              />
+            </div>
           </div>
         </div>
       ) : (

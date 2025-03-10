@@ -68,3 +68,8 @@ form input {
 .light button.slick-arrow.slick-next::before {
   color: rgb(66, 66, 66) !important;
 }
+
+@media (max-width: 500px) {
+  .imgBanner {
+  }
+}

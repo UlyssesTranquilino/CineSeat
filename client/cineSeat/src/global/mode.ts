@@ -35,6 +35,8 @@ export const useMovieStore = create(
           const res = await fetch("http://localhost:5000");
           const data = await res.json();
 
+          console.log("RES: ", res);
+
           set({ movies: data.data, lastFetched: Date.now() });
         } catch (error) {
           console.error("Failed to fetch movies: ", error);

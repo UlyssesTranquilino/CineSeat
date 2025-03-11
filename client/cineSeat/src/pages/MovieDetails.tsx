@@ -94,19 +94,47 @@ const MovieDetails = () => {
             /> */}
           </div>
 
-          <div className="px-5">
-            <h1 className="font-bold text-left mt-20 sm:text-xl md:text-2xl ">
-              About the Movie
-            </h1>
+          <div className="px-5 grid grid-cols-3">
+            <div className="col-span-2">
+              <div>
+                <h1 className="font-bold text-left mt-20 sm:text-xl md:text-2xl ">
+                  About the Movie
+                </h1>
+                <p className="text-left text-md lg:text-lg  mt-5">
+                  {movie.description}
+                </p>
+              </div>
 
-            <div className="mt-10 flex flex-col sm:flex-row justify-between gap-1 ">
-              <p className="text-left text-md md:text-lg max-w-195">
-                {movie.description}
-              </p>
+              <div>
+                <div className="flex justify-between  items-center mt-10">
+                  <h1 className="font-bold text-left sm:text-xl md:text-2xl ">
+                    Cast
+                  </h1>
+                  <button className="text-gray-400 cursor-pointer hover:text-yellow-400">
+                    view more
+                  </button>
+                </div>
+                <div className="flex items-center gap-5 mt-5 flex-wrap">
+                  {movie.cast.slice(0, 5).map((cast: any) => (
+                    <div
+                      key={cast.id}
+                      className="flex flex-col items-center gap-2"
+                    >
+                      <div className="rounded-full overflow-hidden w-18 h-18 flex items-center justify-center">
+                        <img src={cast.profilePath} alt={cast.name} />
+                      </div>
+                      <h1 className="text-sm">{cast.name}</h1>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-20">
               <img
                 src={movie.posterUrl}
                 alt={movie.title}
-                className="w-50 rounded-md md:w-60"
+                className="w-50 rounded-md md:w-60 sm:ml-10"
               />
             </div>
           </div>

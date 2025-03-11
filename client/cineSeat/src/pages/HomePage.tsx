@@ -17,10 +17,16 @@ const HomePage = () => {
 
   useEffect(() => {
     const fetchAndSetMovies = async () => {
-      await fetchMovies();
+      console.log("Calling to fetch");
+      await fetchMovies(); // ✅ Await it to ensure state updates before continuing
+      console.log("Movies updated: ", movies);
     };
     fetchAndSetMovies();
   }, [fetchMovies]);
+
+  useEffect(() => {
+    console.log("✅ Movies updated in state:", movies);
+  }, [movies]);
 
   useEffect(() => {
     console.log("Movies updated: ", movies);

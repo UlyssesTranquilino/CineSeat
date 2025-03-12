@@ -7,6 +7,8 @@ import movieRouter from "./routes/movieRoutes";
 import updateMoviesWithRating from "./config/db";
 import updateMoviesWithGenres from "./config/db";
 import addReviewCount from "./config/db";
+import addCastsAndCrews from "./config/db";
+import addMovieDatabaseID from "./config/db";
 
 dotenv.config();
 

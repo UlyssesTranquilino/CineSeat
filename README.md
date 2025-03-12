@@ -54,3 +54,15 @@
 -Movie Banner Details
 -No yet responsive
 -Added review count in api
+
+Day 11
+
+- Cast and Crew API
+- Cast front end
+- Movie Id Api
+
+Day 12
+
+- Cast and Crew (Fix Responsiveness)
+- Added Certification and Date
+- Hover Animation Cast and Crew

@@ -256,5 +256,154 @@ const updateMoviesWithGenres = async () => {
   }
 };
 
+const addCastsAndCrews = async () => {
+  try {
+    const movies = await Movie.find({});
+
+    for (const movie of movies) {
+      try {
+        // Fetch movie details using title
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
+            movie.title
+          )}&include_adult=false&language=en-US&page=1`,
+          {
+            headers: {
+              accept: "application/json",
+              Authorization:
+                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwNjRkZjNmZmY3OGRlNzBiMjg0Njc4YWMyNDBlZDRlYSIsIm5iZiI6MTczOTUzNDM5OS40NzcsInN1YiI6IjY3YWYzMDNmNmQxYTdiNjA1MjNiNjg1OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.r0BF7YjaupWfLFb6HUPQVagV0cERCUTS-nCQeMZ65WY",
+            },
+          }
+        );
+
+        if (response.data.results.length === 0) {
+          console.warn(`⚠️ No movie found for "${movie.title}"`);
+          continue;
+        }
+
+        const movieID = response.data.results[0].id;
+
+        // Fetch cast and crew details using movie ID
+        const responseCredits = await axios.get(
+          `https://api.themoviedb.org/3/movie/${movieID}/credits?language=en-US`,
+          {
+            headers: {
+              accept: "application/json",
+              Authorization:
+                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwNjRkZjNmZmY3OGRlNzBiMjg0Njc4YWMyNDBlZDRlYSIsIm5iZiI6MTczOTUzNDM5OS40NzcsInN1YiI6IjY3YWYzMDNmNmQxYTdiNjA1MjNiNjg1OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.r0BF7YjaupWfLFb6HUPQVagV0cERCUTS-nCQeMZ65WY",
+            },
+          }
+        );
+
+        const cast = responseCredits.data.cast.map((c: any) => ({
+          adult: c.adult,
+          gender: c.gender,
+          id: c.id,
+          knownForDepartment: c.known_for_department,
+          name: c.name,
+          originalName: c.original_name,
+          popularity: c.popularity,
+          profilePath: c.profile_path
+            ? `https://image.tmdb.org/t/p/w500${c.profile_path}`
+            : null,
+          character: c.character,
+          creditId: c.credit_id,
+          order: c.order,
+        }));
+
+        const crew = responseCredits.data.crew.map((c: any) => ({
+          adult: c.adult,
+          gender: c.gender,
+          id: c.id,
+          knownForDepartment: c.known_for_department,
+          name: c.name,
+          originalName: c.original_name,
+          popularity: c.popularity,
+          profilePath: c.profile_path
+            ? `https://image.tmdb.org/t/p/w500${c.profile_path}`
+            : null,
+          department: c.department,
+          job: c.job,
+          creditId: c.credit_id,
+        }));
+
+        // Update movie with cast and crew
+        await Movie.updateOne(
+          { _id: movie._id }, // <- Correct syntax
+          {
+            $set: {
+              cast,
+              crew,
+            },
+          }
+        );
+
+        console.log(`✅ Cast & Crew updated for "${movie.title}"`);
+      } catch (err) {
+        console.error(
+          `❌ Error updating cast & crew for "${movie.title}":`,
+          err
+        );
+      }
+    }
+  } catch (error) {
+    console.error("❌ Error fetching or updating movies:", error);
+  } finally {
+    mongoose.connection.close();
+  }
+};
+
+const addMovieDatabaseID = async () => {
+  try {
+    const movies = await Movie.find({});
+
+    for (const movie of movies) {
+      try {
+        // Fetch movie details using title
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
+            movie.title
+          )}&include_adult=false&language=en-US&page=1`,
+          {
+            headers: {
+              accept: "application/json",
+              Authorization:
+                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwNjRkZjNmZmY3OGRlNzBiMjg0Njc4YWMyNDBlZDRlYSIsIm5iZiI6MTczOTUzNDM5OS40NzcsInN1YiI6IjY3YWYzMDNmNmQxYTdiNjA1MjNiNjg1OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.r0BF7YjaupWfLFb6HUPQVagV0cERCUTS-nCQeMZ65WY",
+            },
+          }
+        );
+
+        if (response.data.results.length === 0) {
+          console.warn(`⚠️ No movie found for "${movie.title}"`);
+          continue;
+        }
+
+        const movieID = response.data.results[0].id;
+
+        // Update movie with cast and crew
+        await Movie.updateOne(
+          { _id: movie._id }, // <- Correct syntax
+          {
+            $set: {
+              movieDatabaseID: movieID,
+            },
+          }
+        );
+
+        console.log(`✅ Cast & Crew updated for "${movie.title}"`);
+      } catch (err) {
+        console.error(
+          `❌ Error updating cast & crew for "${movie.title}":`,
+          err
+        );
+      }
+    }
+  } catch (error) {
+    console.error("❌ Error fetching or updating movies:", error);
+  } finally {
+    mongoose.connection.close();
+  }
+};
+
 // Run the script
-export default addReviewCount;
+export default addMovieDatabaseID;

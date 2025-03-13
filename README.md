@@ -66,3 +66,8 @@ Day 12
 - Cast and Crew (Fix Responsiveness)
 - Added Certification and Date
 - Hover Animation Cast and Crew
+
+Day 13
+
+- Dummy Reviews
+- Footer

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Rating from "@mui/material/Rating";
+import PersonIcon from "@mui/icons-material/Person";
 
 const MovieDetails = () => {
   const navigate = useNavigate();
@@ -25,6 +26,47 @@ const MovieDetails = () => {
       fetchMovieDetails(id);
     }
   }, [id]);
+
+  interface Review {
+    username: string;
+    review: string;
+    rating: number;
+  }
+
+  const reviews: Review[] = [
+    {
+      username: "johndoe123",
+      review:
+        "Absolutely amazing movie! The story was gripping from start to finish, and the acting was top-notch.",
+      rating: 9.5,
+    },
+    {
+      username: "janedoe456",
+      review:
+        "It was decent, but not as good as I expected. The pacing was a bit slow in parts, and some characters were underdeveloped.",
+      rating: 6.5,
+    },
+    {
+      username: "sarah_98",
+      review:
+        "Terrible movie! The plot was incoherent, and the acting was wooden. Would not recommend it to anyone.",
+      rating: 2.0,
+    },
+    {
+      username: "mike_thebuilder",
+      review:
+        "Enjoyed it overall! A solid action movie with some great fight scenes, but the story was a bit predictable.",
+      rating: 7.8,
+    },
+    {
+      username: "emily_brown",
+      review:
+        "I was really disappointed. The movie was boring, and the ending felt rushed. It didn't live up to the hype.",
+      rating: 4.0,
+    },
+  ];
+
+  console.log(reviews);
 
   return (
     <div>
@@ -147,7 +189,7 @@ const MovieDetails = () => {
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <h1 className="text-sm truncate overflow-hidden text-ellipsis whitespace-nowrap">
+                      <h1 className="w-25 text-sm truncate overflow-hidden text-ellipsis whitespace-nowrap">
                         {cast.name}
                       </h1>
                     </div>
@@ -173,7 +215,7 @@ const MovieDetails = () => {
                       <div className="rounded-full overflow-hidden w-18 h-18 flex items-center justify-center">
                         <img src={cast.profilePath} alt={cast.name} />
                       </div>
-                      <h1 className="text-sm truncate overflow-hidden text-ellipsis whitespace-nowrap">
+                      <h1 className="w-25 text-sm truncate overflow-hidden text-ellipsis whitespace-nowrap">
                         {cast.name}
                       </h1>
                     </div>
@@ -188,6 +230,50 @@ const MovieDetails = () => {
                 alt={movie.title}
                 className="w-50 rounded-md md:w-60 sm:ml-10"
               />
+            </div>
+          </div>
+
+          <div className="px-5 lg:px-0">
+            <h1 className="font-bold text-left mt-20 text-xl md:text-2xl ">
+              Critic Reviews
+            </h1>
+
+            <div className="grid sm:grid-cols-2 gap-10 lg:gap-15 mt-10">
+              {reviews.map((review) => (
+                <div
+                  key={review.username}
+                  className="border-1 border-gray-400 rounded-sm p-5 bg-[rgba(0,0,0,0.4)] light:bg-gray-100 light:border-0"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gray-800 light:bg-white flex items-center justify-center">
+                        <PersonIcon />
+                      </div>
+
+                      <h1>{review.username}</h1>
+                    </div>
+
+                    <div className="flex items-center gap-[2px]">
+                      <Rating
+                        name="read-only"
+                        value={movie.rating.value / 5}
+                        readOnly
+                        precision={0.5}
+                        max={1}
+                        size="medium"
+                        className="scale-80"
+                      />
+                      <p className="text-md text-yellow-400 mt-[1px]">
+                        {review.rating}
+                      </p>
+                    </div>
+                  </div>
+
+                  <p className="text-sm mt-10 text-left mb-5">
+                    {review.review}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </div>

@@ -2,9 +2,10 @@ import React from "react";
 
 const CircleGradient = () => {
   return (
-    <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden bg-black -z-1">
-      <div className="red-gradient w-[60vw] h-[60vw] fixed sm:top-110 -left-120 blur-3xl"></div>
-      <div className="red-gradient w-[50vw] h-[50vw] fixed top-80 md:-right-80 blur-3xl"></div>
+    <div>
+      <div className="absolute top-130  h-full pointer-events-none overflow-hidden z-0 w-[100%]">
+        <div className="red-gradient lg:w-200 lg:h-200 top:60 sm:top-150 -left-40 blur-3xl absolute"></div>
+      </div>
     </div>
   );
 };

@@ -9,6 +9,8 @@ import LoginPage from "./pages/LoginPage";
 //Navbar
 import Navbar from "./components/Navbar";
 
+import Footer from "./components/Footer";
+
 //HomePage
 import HomePage from "./pages/HomePage";
 //Movie Details
@@ -31,7 +33,7 @@ function App() {
   }, [isDarkMode]);
 
   return (
-    <div className="px-3 w-full max-w-[1200px] mx-autolight:text-black ">
+    <div className="px-3 w-full max-w-[1200px] mx-autolight:text-black light:bg-white ">
       <Navbar />
       <div className="relative z-1 ">
         <Routes>
@@ -42,6 +44,8 @@ function App() {
         </Routes>
       </div>
       {isDarkMode && <CircleGradient />}
+
+      <Footer />
     </div>
   );
 }

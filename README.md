@@ -71,3 +71,8 @@ Day 13
 
 - Dummy Reviews
 - Footer
+
+Day 14
+
+- Similar Movies
+- Movies Video in Banner

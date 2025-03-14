@@ -1,10 +1,11 @@
 import { useState, useMemo, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useMovieStore } from "../global/mode";
 import Rating from "@mui/material/Rating";
 import Slider from "react-slick";
 
 const NowShowing = () => {
+  const { id } = useParams();
   const { movies }: { movies: any } = useMovieStore();
 
   const [width, setWidth] = useState(window.innerWidth);
@@ -23,6 +24,11 @@ const NowShowing = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []); // Empty dependency array ensures this runs only once
+
+  useEffect(() => {
+    // Fetch new movie data based on ID change
+    console.log("Fetching movie for ID:", id);
+  }, [id]); // 👈 Watch for ID changes
 
   const settings = {
     dots: true,

@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import Rating from "@mui/material/Rating";
 import PersonIcon from "@mui/icons-material/Person";
 
+import SimilarMovies from "../components/SimilarMovies";
+
 const MovieDetails = () => {
   const navigate = useNavigate();
   const handleBackClick = () => {
@@ -23,9 +25,18 @@ const MovieDetails = () => {
 
   useEffect(() => {
     if (id) {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "instant", // 👈 This makes it immediate
+      });
       fetchMovieDetails(id);
     }
   }, [id]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0); // 👈 This scrolls to the top on route change
+  }, []);
 
   interface Review {
     username: string;
@@ -66,7 +77,10 @@ const MovieDetails = () => {
     },
   ];
 
-  console.log(reviews);
+  const getEmbedUrl = (url: string) => {
+    const videoId = url.split("v=")[1]?.split("&")[0];
+    return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}`;
+  };
 
   return (
     <div>
@@ -82,6 +96,13 @@ const MovieDetails = () => {
                 opacity: 1, // Adjust opacity here (0 to 1)
                 zIndex: -1, // Ensure the background is behind the content
               }}
+            />
+            <iframe
+              src={getEmbedUrl(movie.trailerUrl)}
+              className="top-0 left-0 w-full h-full object-cover absolute "
+              title="Trailer"
+              allow="autoplay; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
             />
 
             <div className="absolute inset-0 bg-black opacity-50"></div>
@@ -275,6 +296,10 @@ const MovieDetails = () => {
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="px-5 lg:px-0">
+            <SimilarMovies genre={movie.genre} title={movie.title} />
           </div>
         </div>
       ) : (

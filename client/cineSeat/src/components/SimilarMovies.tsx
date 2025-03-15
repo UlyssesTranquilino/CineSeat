@@ -20,7 +20,7 @@ const SimilarMovies = ({ genre, title }: { genre: any; title: string }) => {
       </h1>
 
       {/* Movie Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-7 rounded-sm">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-7 rounded-sm mt-10">
         {similarMovies.slice(0, 8).map((movie: any) => (
           <Link to={`/movie/${movie._id}`} key={movie._id}>
             <div className="mb-10 rounded-sm overflow-hidden bg-black relative h-full cursor-pointer hover:opacity-80 hover:scale-105  transition-all duration-300 group">

@@ -76,3 +76,9 @@ Day 14
 
 - Similar Movies
 - Movies Video in Banner
+
+Day 15
+
+- Fix Trailer
+- Make Responsive
+- Next: BookTicket.tsx

@@ -3,7 +3,7 @@ import Logo from "../assets/Logo/CineSeatRed.png";
 
 const Footer = () => {
   return (
-    <footer className="flex flex-col items-center justify-center mt-25">
+    <footer className="flex flex-col items-center justify-center mt-25 py-10 mb-15">
       <div className="  h-[1px] w-full bg-gray-400 light:bg-black" />
       <div className="flex flex-col items-center gap-2 bg-black light:bg-white absolute px-5">
         <img src={Logo} alt="CineSeat Logo" className="w-10 md:w-13" />

@@ -88,7 +88,7 @@ const MovieDetails = () => {
         <div className="light:text-black">
           <div className=" rounded-md overflow-hidden relative text-left  h-55 sm:h-80 md:h-90 mt-3">
             <div
-              className="absolute inset-0 left-10 z-4 "
+              className="absolute inset-0 left-10 z-4 lg:hidden"
               style={{
                 backgroundImage: `url(${movie.backdropUrl})`,
                 backgroundSize: "cover",
@@ -97,11 +97,13 @@ const MovieDetails = () => {
                 zIndex: -1, // Ensure the background is behind the content
               }}
             />
+
             <iframe
               src={getEmbedUrl(movie.trailerUrl)}
-              className="top-0 left-0 w-full h-full object-cover absolute "
+              className="top-0 right-0 w-full max-w-180 h-full rounded-lg object-cover absolute z-1 hidden md:block "
               title="Trailer"
-              allow="autoplay; encrypted-media; gyroscope; picture-in-picture"
+              allow="autoplay; encrypted-media"
+              frameBorder="0"
               allowFullScreen
             />
 
@@ -169,7 +171,21 @@ const MovieDetails = () => {
             /> */}
           </div>
 
-          <div className="px-5 lg:px-0 grid grid-cols-4">
+          <div className="px-5">
+            <h1 className="font-bold text-left mt-20 text-xl md:text-2xl ">
+              Trailer
+            </h1>
+            <iframe
+              src={getEmbedUrl(movie.trailerUrl)}
+              className="w-full h-70 rounded-lg md:hidden mt-10"
+              title="Trailer"
+              allow="autoplay; encrypted-media"
+              frameBorder="0"
+              allowFullScreen
+            />
+          </div>
+
+          <div className="px-5  grid grid-cols-4">
             <div className="col-span-4 sm:col-span-3">
               <div>
                 <h1 className="font-bold text-left mt-20 text-xl md:text-2xl ">
@@ -254,7 +270,7 @@ const MovieDetails = () => {
             </div>
           </div>
 
-          <div className="px-5 lg:px-0">
+          <div className="px-5 ">
             <h1 className="font-bold text-left mt-20 text-xl md:text-2xl ">
               Critic Reviews
             </h1>
@@ -298,7 +314,7 @@ const MovieDetails = () => {
             </div>
           </div>
 
-          <div className="px-5 lg:px-0">
+          <div className="px-5">
             <SimilarMovies genre={movie.genre} title={movie.title} />
           </div>
         </div>

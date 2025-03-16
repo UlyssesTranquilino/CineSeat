@@ -86,9 +86,9 @@ const MovieDetails = () => {
     <div>
       {isSuccess ? (
         <div className="light:text-black">
-          <div className=" rounded-md overflow-hidden relative text-left  h-55 sm:h-80 md:h-90 mt-3">
+          <div className=" group rounded-md overflow-hidden relative text-left  h-55 sm:h-80 md:h-90 mt-3 md:bg-black">
             <div
-              className="absolute inset-0 left-10 z-4 lg:hidden"
+              className="absolute inset-0 left-10 z-4 lg:hidden "
               style={{
                 backgroundImage: `url(${movie.backdropUrl})`,
                 backgroundSize: "cover",
@@ -100,15 +100,14 @@ const MovieDetails = () => {
 
             <iframe
               src={getEmbedUrl(movie.trailerUrl)}
-              className="top-0 right-0 w-full max-w-180 h-full rounded-lg object-cover absolute z-1 hidden md:block "
+              className="top-0 right-0 w-full h-full rounded-lg object-cover absolute z-1 hidden md:block "
               title="Trailer"
               allow="autoplay; encrypted-media"
               frameBorder="0"
               allowFullScreen
             />
 
-            <div className="absolute inset-0 bg-black opacity-50"></div>
-            <div className="absolute z-2 pl-[8%] pt-[4%] sm:pl-15 sm:pt-10 md:pt-14 ">
+            <div className="group-hover:opacity-0  group-hover:pointer-events-none transition-opacity duration-300 absolute z-2 pl-[8%] pt-[4%] sm:pl-15 sm:pt-10 md:pt-14 ">
               <h1 className="text-2xl sm:text-4xl font-bold w-40 sm:w-80 text-left text-white">
                 {movie.title}
               </h1>
@@ -162,7 +161,7 @@ const MovieDetails = () => {
               </button>
             </div>
 
-            <div className="bg-gradient-to-r from-black to-transparent absolute z-1 h-full w-60 sm:w-100 md:w-160"></div>
+            <div className="group-hover:hidden bg-gradient-to-r from-black to-transparent absolute z-1 h-full w-60 sm:w-100 md:w-160"></div>
 
             {/* <img
               src={movie.backdropUrl}
@@ -172,7 +171,7 @@ const MovieDetails = () => {
           </div>
 
           <div className="px-5">
-            <h1 className="font-bold text-left mt-20 text-xl md:text-2xl ">
+            <h1 className="font-bold text-left mt-20 text-xl md:text-2xl md:hidden">
               Trailer
             </h1>
             <iframe

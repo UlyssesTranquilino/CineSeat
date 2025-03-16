@@ -82,3 +82,7 @@ Day 15
 - Fix Trailer
 - Make Responsive
 - Next: BookTicket.tsx
+
+Day 16
+
+- Trailer Full Width

@@ -20,6 +20,7 @@ import { useTheme } from "./global/mode";
 
 //Background
 import CircleGradient from "./Background/CircleGradient";
+import BookTickets from "./pages/BookTickets";
 function App() {
   const { isDarkMode } = useTheme();
 
@@ -41,9 +42,10 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/movie/:id" element={<MovieDetails />} />
+          <Route path="/movie/ticket/:id" element={<BookTickets />} />
         </Routes>
       </div>
-      {isDarkMode && <CircleGradient />}
+      {/* {isDarkMode && <CircleGradient />} */}
 
       <Footer />
     </div>

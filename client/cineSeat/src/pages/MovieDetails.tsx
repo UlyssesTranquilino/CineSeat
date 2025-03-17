@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import Rating from "@mui/material/Rating";
 import PersonIcon from "@mui/icons-material/Person";
 
@@ -33,10 +33,6 @@ const MovieDetails = () => {
       fetchMovieDetails(id);
     }
   }, [id]);
-
-  useEffect(() => {
-    window.scrollTo(0, 0); // 👈 This scrolls to the top on route change
-  }, []);
 
   interface Review {
     username: string;
@@ -79,16 +75,16 @@ const MovieDetails = () => {
 
   const getEmbedUrl = (url: string) => {
     const videoId = url.split("v=")[1]?.split("&")[0];
-    return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}`;
+    return `https://www.youtube.com/embed/${videoId}?autoplay=0&mute=1&loop=1&playlist=${videoId}`;
   };
 
   return (
     <div>
       {isSuccess ? (
         <div className="light:text-black">
-          <div className=" group rounded-md overflow-hidden relative text-left  h-55 sm:h-80 md:h-90 mt-3 md:bg-black">
+          <div className="rounded-md overflow-hidden relative text-left  h-55 sm:h-80 md:h-90 mt-3">
             <div
-              className="absolute inset-0 left-10 z-4 lg:hidden "
+              className="absolute inset-0 left-10 z-4"
               style={{
                 backgroundImage: `url(${movie.backdropUrl})`,
                 backgroundSize: "cover",
@@ -98,16 +94,7 @@ const MovieDetails = () => {
               }}
             />
 
-            <iframe
-              src={getEmbedUrl(movie.trailerUrl)}
-              className="top-0 right-0 w-full h-full rounded-lg object-cover absolute z-1 hidden md:block "
-              title="Trailer"
-              allow="autoplay; encrypted-media"
-              frameBorder="0"
-              allowFullScreen
-            />
-
-            <div className="group-hover:opacity-0  group-hover:pointer-events-none transition-opacity duration-300 absolute z-2 pl-[8%] pt-[4%] sm:pl-15 sm:pt-10 md:pt-14 ">
+            <div className="absolute z-2 pl-[8%] pt-[4%] sm:pl-15 sm:pt-10 md:pt-14 ">
               <h1 className="text-2xl sm:text-4xl font-bold w-40 sm:w-80 text-left text-white">
                 {movie.title}
               </h1>
@@ -156,12 +143,14 @@ const MovieDetails = () => {
                 })}
               </h2>
 
-              <button className="bg-[#FFD700] rounded-sm mt-4 w-24 sm:w-30 lg:w-40 text-xs sm:text-[14px] sm:mt-7 text-black cursor-pointer font-semibold p-1 md:text-md lg:text-lg hover:shadow-lg shadow-yellow-500/50 transition-all duration-300 ease-in-out">
-                Book Tickets
-              </button>
+              <Link to={`/movie/ticket/${movie._id}`}>
+                <button className="bg-[#FFD700] rounded-sm mt-4 w-24 sm:w-30 lg:w-40 text-xs sm:text-[14px] sm:mt-7 text-black cursor-pointer font-semibold p-1 md:text-md lg:text-lg hover:shadow-lg shadow-yellow-500/50 transition-all duration-300 ease-in-out">
+                  Book Tickets
+                </button>
+              </Link>
             </div>
 
-            <div className="group-hover:hidden bg-gradient-to-r from-black to-transparent absolute z-1 h-full w-60 sm:w-100 md:w-160"></div>
+            <div className="group-hover:hidden bg-gradient-to-r from-black to-transparent absolute z-1 h-full w-90 sm:w-140 md:w-160"></div>
 
             {/* <img
               src={movie.backdropUrl}
@@ -171,14 +160,14 @@ const MovieDetails = () => {
           </div>
 
           <div className="px-5">
-            <h1 className="font-bold text-left mt-20 text-xl md:text-2xl md:hidden">
+            <h1 className="font-bold text-left mt-20 text-xl md:text-2xl">
               Trailer
             </h1>
             <iframe
               src={getEmbedUrl(movie.trailerUrl)}
-              className="w-full h-70 rounded-lg md:hidden mt-10"
+              className="w-full h-70 rounded-lg mt-10 md:h-80"
               title="Trailer"
-              allow="autoplay; encrypted-media"
+              allow="encrypted-media"
               frameBorder="0"
               allowFullScreen
             />

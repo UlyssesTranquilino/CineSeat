@@ -86,3 +86,7 @@ Day 15
 Day 16
 
 - Trailer Full Width
+
+Day 17
+
+- Pick Time and Location

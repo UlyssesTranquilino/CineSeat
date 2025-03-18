@@ -90,3 +90,9 @@ Day 16
 Day 17
 
 - Pick Time and Location
+
+Day 18
+
+-Seat.tsx
+-Number of Seats
+-Created Seat array

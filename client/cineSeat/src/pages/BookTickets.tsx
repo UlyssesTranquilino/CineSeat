@@ -33,6 +33,7 @@ const BookTickets = () => {
   }, [id]);
 
   const [days, setDays] = useState([]);
+  const activeDay = days.find((day) => day.isActive);
 
   useEffect(() => {
     const nextThreeDays = [];
@@ -154,7 +155,7 @@ const BookTickets = () => {
                   const showtimes = generateShowtimes(index);
 
                   return (
-                    <tr key={show._id} className="hover:bg-gray-800 transition">
+                    <tr key={show._id} className=" transition">
                       {/* Location */}
                       <td className="border  border-gray-700 p-4">
                         <div>
@@ -171,17 +172,27 @@ const BookTickets = () => {
                       <td className="border border-gray-700 p-4">
                         <div className="flex gap-2 flex-wrap">
                           {showtimes.map((time) => (
-                            <button
+                            <Link
                               key={time}
-                              className="bg-[#292929] light:bg-gray-200 rounded-md px-3 py-2 transition hover:bg-[#404040]"
+                              to="/movie/seat"
+                              state={{
+                                location: show.location,
+                                theaterName: show.theaterName,
+                                time: formatTime(time),
+                                screen: show.screen,
+                                title: movie.title,
+                                day: activeDay,
+                              }}
                             >
-                              <h1 className="text-[#FFD700] light:text-black text-lg font-semibold">
-                                {formatTime(time)}
-                              </h1>
-                              <p className="text-gray-400 light:text-gray-600 text-sm">
-                                Screen {show.screen}
-                              </p>
-                            </button>
+                              <button className="bg-[#292929] light:bg-gray-200 rounded-md px-3 py-2 transition hover:bg-[#404040]">
+                                <h1 className="text-[#FFD700] light:text-black text-lg font-semibold">
+                                  {formatTime(time)}
+                                </h1>
+                                <p className="text-gray-400 light:text-gray-600 text-sm">
+                                  Screen {show.screen}
+                                </p>
+                              </button>
+                            </Link>
                           ))}
                         </div>
                       </td>

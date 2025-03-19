@@ -96,3 +96,10 @@ Day 18
 -Seat.tsx
 -Number of Seats
 -Created Seat array
+
+Day 19
+
+- Responsive Seats
+- Horizontal Scrolling in smaller devices
+- Add Price
+- Fix some light and dark mode

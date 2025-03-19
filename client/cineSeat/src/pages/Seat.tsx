@@ -1,66 +1,61 @@
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 const Seat = () => {
+  const navigate = useNavigate();
+
   const { state } = useLocation();
   const [seats, setSeats] = useState(1);
-  const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
+  const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  if (state) {
-    const { location, theaterName, time, screen, title, day } = state;
-    console.log({ location, theaterName, time, screen, day });
-  }
-
-  const totalSeats = 40;
-  const seatsPerRow = 8;
+  // Center the scroll container when component mounts
+  useEffect(() => {
+    if (scrollRef.current) {
+      const container = scrollRef.current;
+      container.scrollLeft =
+        (container.scrollWidth - container.clientWidth) / 2;
+    }
+  }, []);
 
   const handleSelectSeat = (seatNumber: string) => {
-    setSelectedSeats((prev) => {
-      if (prev.includes(seatNumber)) {
-        return prev.filter((seat) => seat !== seatNumber);
-      } else if (prev.length < seats) {
-        return [...prev, seatNumber];
-      } else {
-        return prev; // If already at max seats, don't add more
-      }
-    });
+    setSelectedSeats((prev) =>
+      prev.includes(seatNumber)
+        ? prev.filter((seat) => seat !== seatNumber)
+        : prev.length < seats
+        ? [...prev, seatNumber]
+        : prev
+    );
   };
 
-  const frontRowSeats = 14; // 14 seats per row in the front
+  const frontRowSeats = 14;
   const frontRowCount = 3;
-
-  const columnSeats = 10; // 15 seats per column
-  const rowCount = 9; // 20 rows
+  const columnSeats = 10;
+  const rowCount = 9;
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
   return (
-    <div className="px-5 mt-5 text-left">
-      {/* <div className="flex items-end">
-        <ArrowBackIosIcon />
-      </div> */}
-
+    <div className="px-4 sm:px-8 mt-5 text-left">
+      {/* Back Button and Title */}
       <div className="flex items-center gap-3">
-        <ArrowBackIosIcon className="mt-1 light:text-black" />
+        <div onClick={() => navigate(-1)} className="cursor-pointer">
+          <ArrowBackIosIcon className="mt-1 text-white light:text-black" />
+        </div>
         <div>
-          <h1 className=" mt-10 text-2xl sm:text-4xl font-bold text-left text-white light:text-black">
-            {state.title}
+          <h1 className="mt-6 text-xl sm:text-3xl font-bold text-white light:text-black">
+            {state?.title}
           </h1>
-
-          <p className="text-left mt-3 md:text-lg light:text-black">
-            {state.day.week}, {state.day.month}, {state.day.day} | {state.time}
+          <p className="mt-2 text-sm sm:text-base text-gray-300 light:text-black">
+            {state?.day.week}, {state?.day.month} {state?.day.day} |{" "}
+            {state?.time}
           </p>
         </div>
       </div>
 
-      <div className="mt-10 sm:flex items-center  gap-5 ">
-        <h1 className="block text-white light:text-black mb-2 md:text-lg">
-          Select Seats
-        </h1>
-      </div>
-
-      <div className="sm:flex items-center  gap-5 ">
-        <label className="block text-white light:text-black mb-2">
+      {/* Seat Selection Input */}
+      <div className="mt-6 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <label className="text-white light:text-black text-sm sm:text-base md:text-lg">
           Number of Seats:
         </label>
         <input
@@ -68,126 +63,146 @@ const Seat = () => {
           min="1"
           value={seats}
           onChange={(e) => setSeats(Number(e.target.value))}
-          className="w-full max-w-50 p-2 border border-gray-400 rounded-md bg-[#292929] light:bg-gray-200 text-white light:text-black focus:border-[#FFD700] focus:ring-1 focus:ring-[#FFD700] outline-none"
+          className="w-full sm:w-auto max-w-20 p-2 border border-gray-400 rounded-md bg-[#292929] light:bg-gray-200 text-white light:text-black focus:border-[#FFD700] focus:ring-1 focus:ring-[#FFD700] outline-none"
         />
       </div>
 
-      <div className="mt-15">
-        <div className="bg-gray-500 flex items-center justify-center p-2 md:text-lg max-w-240 mx-auto mb-15">
+      {/* Screen */}
+      <div className="mt-8 lg:mt-15">
+        <div className="bg-gray-500 text-white flex items-center justify-center p-2 text-sm sm:text-base mx-auto max-w-[1000px]">
           SCREEN
         </div>
       </div>
 
-      {/* Front Row */}
-      <div className="mb-8">
-        {[...Array(frontRowCount)].map((_, rowIndex) => (
-          <div
-            key={rowIndex}
-            className="flex justify-center items-center gap-2 mb-2"
-          >
-            {/* Label for row */}
-            <span className="w-6 text-center text-white light:text-black">
-              {alphabet[rowIndex]}
-            </span>
-            {[...Array(frontRowSeats)].map((_, seatIndex) => {
-              const seatLabel = `${alphabet[rowIndex]}${seatIndex + 1}`;
-              return (
-                <button
-                  key={seatLabel}
-                  onClick={() => handleSelectSeat(seatLabel)}
-                  className={`w-10 h-10 rounded-md flex items-center justify-center transition
-                    ${
-                      selectedSeats.includes(seatLabel)
-                        ? "bg-[#FFD700] text-black"
-                        : "bg-[#292929] text-white hover:bg-[#404040]"
-                    }
-                  `}
-                >
-                  {seatLabel}
-                </button>
-              );
-            })}
+      <div
+        ref={scrollRef}
+        className="overflow-x-scroll seats-container mt-6 whitespace-nowrap  lg:flex lg:flex-col lg:items-center"
+        style={{
+          scrollBehavior: "smooth",
+        }}
+      >
+        {/* Front Row */}
+        <div className="mb-8 space-y-2 w-full flex flex-col items-start lg:items-center justify-center ml-30 sm:ml-35 md:ml-40 lg:ml-0">
+          {[...Array(frontRowCount)].map((_, rowIndex) => (
+            <div
+              key={rowIndex}
+              className="flex justify-center items-center gap-x-2"
+            >
+              <span className="w-5 text-center text-sm sm:text-base text-white light:text-black">
+                {alphabet[rowIndex]}
+              </span>
+              {[...Array(frontRowSeats)].map((_, seatIndex) => {
+                const seatLabel = `${alphabet[rowIndex]}${seatIndex + 1}`;
+                return (
+                  <button
+                    key={seatLabel}
+                    onClick={() => handleSelectSeat(seatLabel)}
+                    className={`min-w-8 min-h-8 sm:min-w-10 sm:min-h-10 text-xs sm:text-sm rounded-md flex items-center justify-center cursor-pointer transition
+              ${
+                selectedSeats.includes(seatLabel)
+                  ? "bg-[#FFD700] text-black"
+                  : "bg-[#292929] text-white hover:bg-[#404040]"
+              }`}
+                  >
+                    {seatLabel}
+                  </button>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+
+        {/* Main Seating Area */}
+        <div className="flex justify-start gap-8">
+          {/* Left Side */}
+          <div className="space-y-2">
+            {[...Array(rowCount)].map((_, rowIndex) => (
+              <div key={rowIndex} className="flex items-center gap-x-2">
+                <span className="w-5 text-center text-sm sm:text-base text-white light:text-black">
+                  {alphabet[rowIndex + frontRowCount]}
+                </span>
+                {[...Array(columnSeats)].map((_, seatIndex) => {
+                  const seatLabel = `${alphabet[rowIndex + frontRowCount]}${
+                    seatIndex + 1
+                  }`;
+                  return (
+                    <button
+                      key={seatLabel}
+                      onClick={() => handleSelectSeat(seatLabel)}
+                      className={`min-w-8 min-h-8 sm:min-w-10 sm:min-h-10 text-xs sm:text-sm rounded-md flex items-center justify-center cursor-pointer transition
+                  ${
+                    selectedSeats.includes(seatLabel)
+                      ? "bg-[#FFD700] text-black"
+                      : "bg-[#292929] text-white hover:bg-[#404040]"
+                  }`}
+                    >
+                      {seatLabel}
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      {/* Space Between Rows */}
-      <div className="h-8"></div>
-
-      {/* Main Seating Area */}
-      <div className="flex justify-center gap-12">
-        {/* Left Column */}
-        <div>
-          {[...Array(rowCount)].map((_, rowIndex) => (
-            <div key={rowIndex} className="flex items-center gap-2 mb-2">
-              {/* Label for row */}
-              <span className="w-6 text-center text-white light:text-black">
-                {alphabet[rowIndex + frontRowCount]}
-              </span>
-              {[...Array(columnSeats)].map((_, seatIndex) => {
-                const seatLabel = `${alphabet[rowIndex + frontRowCount]}${
-                  seatIndex + 1
-                }`;
-                return (
-                  <button
-                    key={seatLabel}
-                    onClick={() => handleSelectSeat(seatLabel)}
-                    className={`w-10 h-10 rounded-md flex items-center justify-center transition
-                      ${
-                        selectedSeats.includes(seatLabel)
-                          ? "bg-[#FFD700] text-black"
-                          : "bg-[#292929] text-white hover:bg-[#404040]"
-                      }
-                    `}
-                  >
-                    {seatLabel}
-                  </button>
-                );
-              })}
-            </div>
-          ))}
-        </div>
-
-        {/* Right Column */}
-        <div>
-          {[...Array(rowCount)].map((_, rowIndex) => (
-            <div key={rowIndex} className="flex items-center gap-2 mb-2">
-              {/* Label for row */}
-              <span className="w-6 text-center text-white light:text-black">
-                {alphabet[rowIndex + frontRowCount]}
-              </span>
-              {[...Array(columnSeats)].map((_, seatIndex) => {
-                const seatLabel = `${alphabet[rowIndex + frontRowCount]}${
-                  seatIndex + columnSeats + 1
-                }`;
-                return (
-                  <button
-                    key={seatLabel}
-                    onClick={() => handleSelectSeat(seatLabel)}
-                    className={`w-10 h-10 rounded-md flex items-center justify-center transition
-                      ${
-                        selectedSeats.includes(seatLabel)
-                          ? "bg-[#FFD700] text-black"
-                          : "bg-[#292929] text-white hover:bg-[#404040]"
-                      }
-                    `}
-                  >
-                    {seatLabel}
-                  </button>
-                );
-              })}
-            </div>
-          ))}
+          {/* Right Side */}
+          <div className="space-y-2">
+            {[...Array(rowCount)].map((_, rowIndex) => (
+              <div key={rowIndex} className="flex items-center gap-x-2">
+                <span className="w-5 text-center text-sm sm:text-base text-white light:text-black">
+                  {alphabet[rowIndex + frontRowCount]}
+                </span>
+                {[...Array(columnSeats)].map((_, seatIndex) => {
+                  const seatLabel = `${alphabet[rowIndex + frontRowCount]}${
+                    seatIndex + columnSeats + 1
+                  }`;
+                  return (
+                    <button
+                      key={seatLabel}
+                      onClick={() => handleSelectSeat(seatLabel)}
+                      className={`min-w-8 min-h-8 sm:min-w-10 sm:min-h-10 text-xs sm:text-sm rounded-md flex items-center justify-center cursor-pointer transition
+                  ${
+                    selectedSeats.includes(seatLabel)
+                      ? "bg-[#FFD700] text-black"
+                      : "bg-[#292929] text-white hover:bg-[#404040]"
+                  }`}
+                    >
+                      {seatLabel}
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
+
       {/* Selected Seats */}
-      <div className="mt-5 text-white light:text-black">
-        <p>
-          Selected Seats:{" "}
-          {selectedSeats.length > 0
-            ? selectedSeats.join(", ")
-            : "No seats selected"}
-        </p>
+      <div className="mt-10 text-white light:text-black text-sm">
+        <h1 className="font-semibold text-xl md:text-2xl">Selected Seats: </h1>
+        <div className="mt-3">
+          {selectedSeats.length > 0 ? (
+            <div className="flex items-center gap-3">
+              {selectedSeats.map((seat: string) => (
+                <div
+                  key={seat}
+                  className="border-1 p-3 w-10 h-10 flex items-center justify-center rounded-md"
+                >
+                  {seat}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="md:text-lg">No seats selected</p>
+          )}
+        </div>
+      </div>
+
+      {/* Check Out */}
+
+      <div className="mt-20 flex items-center justify-center">
+        <button className="bg-[#FFD700] rounded-sm p-2 mt-4 w-full max-w-50 text-xs sm:text-[14px] sm:mt-7 text-black cursor-pointer font-semibold p-1 md:text-md lg:text-lg hover:shadow-lg shadow-yellow-500/50 transition-all duration-300 ease-in-out">
+          Proceed to Payment
+        </button>
       </div>
     </div>
   );

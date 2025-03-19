@@ -75,3 +75,9 @@ form input {
   .imgBanner {
   }
 }
+
+@media (min-width: 1100px) {
+  .seats-container {
+    overflow-x: hidden;
+  }
+}

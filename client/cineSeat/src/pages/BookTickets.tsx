@@ -103,7 +103,7 @@ const BookTickets = () => {
             {movie.genre.map((genre: string) => (
               <div
                 key={genre}
-                className="px-3 py-2 rounded-full bg-[#1A1A1A] light:bg-gray-200 light:text-black"
+                className=" px-3 py-2 rounded-full bg-[#1A1A1A] light:bg-gray-200 light:text-black"
               >
                 {genre}
               </div>
@@ -174,7 +174,7 @@ const BookTickets = () => {
                           {showtimes.map((time) => (
                             <Link
                               key={time}
-                              to="/movie/seat"
+                              to={`/movie/seat/${id}`}
                               state={{
                                 location: show.location,
                                 theaterName: show.theaterName,
@@ -184,13 +184,17 @@ const BookTickets = () => {
                                 day: activeDay,
                               }}
                             >
-                              <button className="bg-[#292929] light:bg-gray-200 rounded-md px-3 py-2 transition hover:bg-[#404040]">
+                              <button className="cursor-pointer bg-[#292929] rounded-md px-3 py-2 transition hover:bg-[#404040] light:hover:bg-gray-100 light:bg-transparent light:border-1 border-black">
                                 <h1 className="text-[#FFD700] light:text-black text-lg font-semibold">
                                   {formatTime(time)}
                                 </h1>
-                                <p className="text-gray-400 light:text-gray-600 text-sm">
+                                <p className="text-gray-300 light:text-gray-700 text-sm">
                                   Screen {show.screen}
                                 </p>
+                                <p className="text-white light:text-black text-sm mt-1">
+                                  ₱{show.price.toFixed(2)}
+                                </p>{" "}
+                                {/* Display price */}
                               </button>
                             </Link>
                           ))}

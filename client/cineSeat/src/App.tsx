@@ -44,7 +44,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/movie/:id" element={<MovieDetails />} />
           <Route path="/movie/ticket/:id" element={<BookTickets />} />
-          <Route path="/movie/seat" element={<Seat />} />
+          <Route path="/movie/seat/:id" element={<Seat />} />
         </Routes>
       </div>
       {/* {isDarkMode && <CircleGradient />} */}

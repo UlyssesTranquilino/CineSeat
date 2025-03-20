@@ -165,7 +165,7 @@ const MovieDetails = () => {
             </h1>
             <iframe
               src={getEmbedUrl(movie.trailerUrl)}
-              className="w-full h-70 rounded-lg mt-10 md:h-80"
+              className="w-full h-70 rounded-lg mt-10 md:h-80 lg:h-100"
               title="Trailer"
               allow="encrypted-media"
               frameBorder="0"

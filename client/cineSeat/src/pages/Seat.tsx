@@ -10,6 +10,8 @@ const Seat = () => {
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  const [totalPrice, setTotalPrice] = useState(0);
+
   // Center the scroll container when component mounts
   useEffect(() => {
     if (scrollRef.current) {
@@ -65,6 +67,42 @@ const Seat = () => {
           onChange={(e) => setSeats(Number(e.target.value))}
           className="w-full sm:w-auto max-w-20 p-2 border border-gray-400 rounded-md bg-[#292929] light:bg-gray-200 text-white light:text-black focus:border-[#FFD700] focus:ring-1 focus:ring-[#FFD700] outline-none"
         />
+      </div>
+
+      {/* Selected Seats */}
+      <div className="mt-5 text-white light:text-black text-sm">
+        <h1 className="font-semibold text-xl md:text-2xl">Selected Seats: </h1>
+        <div className="mt-3">
+          {selectedSeats.length > 0 ? (
+            <div className="flex items-center gap-3">
+              {selectedSeats.map((seat: string) => (
+                <div
+                  key={seat}
+                  className="border-1 p-3 w-10 h-10 flex items-center justify-center rounded-md"
+                >
+                  {seat}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="md:text-lg">No seats selected</p>
+          )}
+        </div>
+      </div>
+
+      {/* Price */}
+      <div className="mt-5 text-white light:text-black text-sm">
+        <h1 className="font-semibold text-xl md:text-2xl">Total Price </h1>
+        <div className="mt-3">
+          {selectedSeats.length > 0 ? (
+            <h1 className="md:text-lg">
+              {" "}
+              ₱{(selectedSeats.length * state.price).toFixed(2)}
+            </h1>
+          ) : (
+            <p className="md:text-lg">Select seats to see the total price</p>
+          )}
+        </div>
       </div>
 
       {/* Screen */}
@@ -176,31 +214,10 @@ const Seat = () => {
         </div>
       </div>
 
-      {/* Selected Seats */}
-      <div className="mt-10 text-white light:text-black text-sm">
-        <h1 className="font-semibold text-xl md:text-2xl">Selected Seats: </h1>
-        <div className="mt-3">
-          {selectedSeats.length > 0 ? (
-            <div className="flex items-center gap-3">
-              {selectedSeats.map((seat: string) => (
-                <div
-                  key={seat}
-                  className="border-1 p-3 w-10 h-10 flex items-center justify-center rounded-md"
-                >
-                  {seat}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="md:text-lg">No seats selected</p>
-          )}
-        </div>
-      </div>
-
       {/* Check Out */}
 
       <div className="mt-20 flex items-center justify-center">
-        <button className="bg-[#FFD700] rounded-sm p-2 mt-4 w-full max-w-50 text-xs sm:text-[14px] sm:mt-7 text-black cursor-pointer font-semibold p-1 md:text-md lg:text-lg hover:shadow-lg shadow-yellow-500/50 transition-all duration-300 ease-in-out">
+        <button className="bg-[#FFD700] rounded-sm p-2 mt-4 w-full max-w-50 text-xs sm:text-[14px] md:text-lg sm:mt-7 text-black cursor-pointer font-semibold md:text-md lg:text-lg hover:shadow-lg shadow-yellow-500/50 transition-all duration-300 ease-in-out">
           Proceed to Payment
         </button>
       </div>

@@ -81,3 +81,27 @@ form input {
     overflow-x: hidden;
   }
 }
+
+/* Scroll Bar */
+/* Default (Dark Mode) */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #9f9f9f; /* Dark thumb color (gray-600) */
+  border-radius: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: #2c2c2c; /* Dark track color (gray-800) */
+}
+
+/* Light Mode */
+.light .custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #8b8b8b; /* Light thumb color (gray-400) */
+}
+
+.light .custom-scrollbar::-webkit-scrollbar-track {
+  background-color: #fcfcfc; /* Light track color (gray-200) */
+}

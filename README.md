@@ -103,3 +103,10 @@ Day 19
 - Horizontal Scrolling in smaller devices
 - Add Price
 - Fix some light and dark mode
+
+Day 20
+
+- Searchbar in Navbar
+- Not Fixed in Mobile Yet
+- Shows results when searching
+- Nacigate to details when clicked

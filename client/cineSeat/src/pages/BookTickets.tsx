@@ -182,6 +182,7 @@ const BookTickets = () => {
                                 screen: show.screen,
                                 title: movie.title,
                                 day: activeDay,
+                                price: show.price.toFixed(2),
                               }}
                             >
                               <button className="cursor-pointer bg-[#292929] rounded-md px-3 py-2 transition hover:bg-[#404040] light:hover:bg-gray-100 light:bg-transparent light:border-1 border-black">

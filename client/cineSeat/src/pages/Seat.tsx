@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 const Seat = () => {
@@ -107,7 +107,7 @@ const Seat = () => {
 
       {/* Screen */}
       <div className="mt-8 lg:mt-15">
-        <div className="bg-gray-500 text-white flex items-center justify-center p-2 text-sm sm:text-base mx-auto max-w-[1000px]">
+        <div className="bg-gray-500  text-white flex items-center justify-center p-2 text-sm sm:text-base mx-auto max-w-[1000px]">
           SCREEN
         </div>
       </div>
@@ -136,11 +136,11 @@ const Seat = () => {
                     key={seatLabel}
                     onClick={() => handleSelectSeat(seatLabel)}
                     className={`min-w-8 min-h-8 sm:min-w-10 sm:min-h-10 text-xs sm:text-sm rounded-md flex items-center justify-center cursor-pointer transition
-              ${
-                selectedSeats.includes(seatLabel)
-                  ? "bg-[#FFD700] text-black"
-                  : "bg-[#292929] text-white hover:bg-[#404040]"
-              }`}
+    ${
+      selectedSeats.includes(seatLabel)
+        ? "bg-[#FFD700] text-black" // Selected Seat
+        : "bg-[#292929] text-white hover:bg-[#404040] light:bg-gray-200 light:text-black light:hover:bg-gray-300"
+    }`}
                   >
                     {seatLabel}
                   </button>
@@ -171,7 +171,7 @@ const Seat = () => {
                   ${
                     selectedSeats.includes(seatLabel)
                       ? "bg-[#FFD700] text-black"
-                      : "bg-[#292929] text-white hover:bg-[#404040]"
+                      : "bg-[#292929] text-white hover:bg-[#404040] light:bg-gray-200 light:text-black light:hover:bg-gray-300"
                   }`}
                     >
                       {seatLabel}
@@ -201,7 +201,7 @@ const Seat = () => {
                   ${
                     selectedSeats.includes(seatLabel)
                       ? "bg-[#FFD700] text-black"
-                      : "bg-[#292929] text-white hover:bg-[#404040]"
+                      : "bg-[#292929] text-white hover:bg-[#404040] light:bg-gray-200 light:text-black light:hover:bg-gray-300"
                   }`}
                     >
                       {seatLabel}
@@ -217,9 +217,23 @@ const Seat = () => {
       {/* Check Out */}
 
       <div className="mt-20 flex items-center justify-center">
-        <button className="bg-[#FFD700] rounded-sm p-2 mt-4 w-full max-w-50 text-xs sm:text-[14px] md:text-lg sm:mt-7 text-black cursor-pointer font-semibold md:text-md lg:text-lg hover:shadow-lg shadow-yellow-500/50 transition-all duration-300 ease-in-out">
-          Proceed to Payment
-        </button>
+        <Link
+          to={`/movie/payment/${state.id}`}
+          state={{
+            id: state.id,
+            title: state.title,
+            day: state.day,
+            time: state.time,
+            seats: selectedSeats,
+            totalPrice: selectedSeats.length * state.price,
+            image: state.image,
+            genre: state.genre,
+          }}
+        >
+          <button className="bg-[#FFD700] rounded-sm p-2 mt-4 w-full max-w-50 text-xs sm:text-[14px] sm:text-lg sm:mt-7 text-black cursor-pointer font-semibold md:text-md lg:text-lg hover:shadow-lg shadow-yellow-500/50 transition-all duration-300 ease-in-out">
+            Proceed to Payment
+          </button>
+        </Link>
       </div>
     </div>
   );

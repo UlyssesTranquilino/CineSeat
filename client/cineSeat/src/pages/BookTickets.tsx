@@ -176,6 +176,7 @@ const BookTickets = () => {
                               key={time}
                               to={`/movie/seat/${id}`}
                               state={{
+                                id: show._id,
                                 location: show.location,
                                 theaterName: show.theaterName,
                                 time: formatTime(time),
@@ -183,6 +184,8 @@ const BookTickets = () => {
                                 title: movie.title,
                                 day: activeDay,
                                 price: show.price.toFixed(2),
+                                image: movie.posterUrl,
+                                genre: movie.genre,
                               }}
                             >
                               <button className="cursor-pointer bg-[#292929] rounded-md px-3 py-2 transition hover:bg-[#404040] light:hover:bg-gray-100 light:bg-transparent light:border-1 border-black">

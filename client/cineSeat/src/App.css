@@ -83,7 +83,36 @@ form input {
 }
 
 /* Scroll Bar */
+/* Default (Dark Mode) *
+
 /* Default (Dark Mode) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background-color: #9f9f9f; /* Dark thumb color (gray-600) */
+  border-radius: 8px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+  background-color: #2c2c2c; /* Dark track color (gray-800) */
+}
+
+/* Light Mode */
+.light html::-webkit-scrollbar-thumb,
+.light body::-webkit-scrollbar-thumb {
+  background-color: #8b8b8b; /* Light thumb color (gray-400) */
+}
+
+.light html::-webkit-scrollbar-track,
+.light body::-webkit-scrollbar-track {
+  background-color: #ffffff; /* Light track color (gray-200) */
+}
+
 .custom-scrollbar::-webkit-scrollbar {
   width: 8px;
 }

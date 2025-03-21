@@ -109,4 +109,11 @@ Day 20
 - Searchbar in Navbar
 - Not Fixed in Mobile Yet
 - Shows results when searching
-- Nacigate to details when clicked
+- Navigate to details when clicked
+
+Day 21
+
+- Payment method
+- Fix Search Navbar in mobile
+- Fix Payment Tab next
+- Add Confirmation Next

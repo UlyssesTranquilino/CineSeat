@@ -8,14 +8,12 @@ import LoginPage from "./pages/LoginPage";
 
 //Navbar
 import Navbar from "./components/Navbar";
-
 import Footer from "./components/Footer";
 
-//HomePage
 import HomePage from "./pages/HomePage";
-//Movie Details
 import MovieDetails from "./pages/MovieDetails";
 import Seat from "./pages/Seat";
+import Payment from "./pages/Payment";
 
 import { useTheme } from "./global/mode";
 
@@ -45,6 +43,7 @@ function App() {
           <Route path="/movie/:id" element={<MovieDetails />} />
           <Route path="/movie/ticket/:id" element={<BookTickets />} />
           <Route path="/movie/seat/:id" element={<Seat />} />
+          <Route path="/movie/payment/:id" element={<Payment />} />
         </Routes>
       </div>
       {/* {isDarkMode && <CircleGradient />} */}

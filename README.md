@@ -117,3 +117,7 @@ Day 21
 - Fix Search Navbar in mobile
 - Fix Payment Tab next
 - Add Confirmation Next
+
+Day 22
+
+- Confirmation Page pero not fix

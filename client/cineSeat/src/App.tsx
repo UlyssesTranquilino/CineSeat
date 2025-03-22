@@ -14,6 +14,7 @@ import HomePage from "./pages/HomePage";
 import MovieDetails from "./pages/MovieDetails";
 import Seat from "./pages/Seat";
 import Payment from "./pages/Payment";
+import Confirmation from "./pages/Confirmation";
 
 import { useTheme } from "./global/mode";
 
@@ -44,6 +45,7 @@ function App() {
           <Route path="/movie/ticket/:id" element={<BookTickets />} />
           <Route path="/movie/seat/:id" element={<Seat />} />
           <Route path="/movie/payment/:id" element={<Payment />} />
+          <Route path="/movie/confirmation/:id" element={<Confirmation />} />
         </Routes>
       </div>
       {/* {isDarkMode && <CircleGradient />} */}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 const Payment = () => {
@@ -7,12 +7,19 @@ const Payment = () => {
   const { state } = useLocation(); // Receives data from Seat component
   const [paymentMethod, setPaymentMethod] = useState("credit_card");
 
-  console.log("STate; ", state);
   const handlePayment = () => {
     // Simulate Payment Processing
     setTimeout(() => {
-      navigate("/confirmation", {
-        state: { seats: state?.selectedSeats, total: state?.totalPrice },
+      navigate(`/confirmation${state.id}`, {
+        state: {
+          title: state?.title,
+          selectedSeats: state?.seats,
+          totalPrice: state?.totalPrice,
+          day: state?.day,
+          time: state?.time,
+          image: state?.image,
+          id: state?.id,
+        },
       });
     }, 2000);
   };
@@ -139,6 +146,7 @@ const Payment = () => {
           )}
 
           {/* Pay Button */}
+
           <button
             onClick={handlePayment}
             className=" max-w-180 cursor-pointer bg-[#FFD700] rounded-sm p-3 mt-6 w-full text-black font-semibold hover:shadow-lg shadow-yellow-500/50 light:shadow-gray-200 transition-all duration-300 ease-in-out"

@@ -10,7 +10,7 @@ const Payment = () => {
   const handlePayment = () => {
     // Simulate Payment Processing
     setTimeout(() => {
-      navigate(`/confirmation${state.id}`, {
+      navigate(`/movie/confirmation/${state.id}`, {
         state: {
           title: state?.title,
           selectedSeats: state?.seats,
@@ -19,6 +19,7 @@ const Payment = () => {
           time: state?.time,
           image: state?.image,
           id: state?.id,
+          price: state?.totalPrice.toFixed(2),
         },
       });
     }, 2000);
@@ -43,49 +44,43 @@ const Payment = () => {
         </div>
       </div>
 
-      <div className="gap-10 md:flex flex-row-reverse items-start justify-end">
-        <div className="flex-[2]">
+      <div className="gap-5 md:flex flex-row-reverse items-start justify-end">
+        <div className="flex-[3]">
           {/* Selected Seats & Total Price */}
-          <div className="mt-5 text-white light:text-black">
-            <h1 className="mt-6 text-xl sm:text-3xl font-bold text-white light:text-black">
+          <div className="mt-5 text-white light:text-black flex flex-col items-start lg:pl-20">
+            {/* <h1 className="mt-6 text-xl sm:text-3xl font-bold text-white light:text-black">
               Ticket Summary
-            </h1>
+            </h1> */}
 
-            <img className="max-w-50" src={state.image} alt={state.title} />
-            {/* Selected Seats */}
-            <div className="mt-5 text-white light:text-black text-sm ">
-              <h1 className="font-semibold text-xl md:text-2xl">
-                Selected Seats:{" "}
-              </h1>
-              <div className="mt-3">
-                {state.seats.length > 0 ? (
-                  <div className="flex items-center gap-3">
-                    {state.seats.map((seat: string) => (
-                      <div
-                        key={seat}
-                        className="border-1 p-3 w-10 h-10 flex items-center justify-center rounded-md"
-                      >
-                        {seat}
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="md:text-lg">No seats selected</p>
-                )}
-              </div>
+            <img className="max-w-55" src={state.image} alt={state.title} />
+            <h1 className="font-semibold text-xl md:text-2xl mt-5">
+              Selected Seats:{" "}
+            </h1>
+            <div className="mt-3">
+              {state.seats.length > 0 ? (
+                <div className="flex items-center gap-3">
+                  {state.seats.map((seat: string) => (
+                    <div
+                      key={seat}
+                      className="border-1 p-3 w-10 h-10 flex items-center justify-center rounded-md"
+                    >
+                      {seat}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="md:text-lg">No seats selected</p>
+              )}
             </div>
-            <p className="text-lg mt-2"></p>
-            <h2 className="text-xl font-semibold mt-4">
-              Total Price:{" "}
-              <h4 className="text-[#FFD700] light:text-gray-600">
-                {" "}
-                ₱{state?.totalPrice.toFixed(2)}
-              </h4>
-            </h2>
+            <h2 className="text-xl font-semibold mt-4 ">Total Price: </h2>
+            <h4 className="text-[#FFD700] light:text-gray-600">
+              {" "}
+              ₱{state?.totalPrice.toFixed(2)}
+            </h4>
           </div>
         </div>
 
-        <div className="flex-[4] ">
+        <div className="flex-[5] ">
           {/* Back Button and Title */}
           <div className="md:flex gap-3 hidden ">
             <div

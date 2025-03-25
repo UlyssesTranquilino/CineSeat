@@ -41,10 +41,29 @@ const Confirmation = () => {
         </div>
       </div>
 
+      {/* Ticket Details */}
+      <div className="mt-6">
+        <h2 className="text-xl font-semibold">Ticket Details</h2>
+        <div className="flex flex-col space-y-2 mt-4">
+          <div className="flex">
+            <p className="font-semibold mr-2">Name:</p>
+            <p className="text-lg">John Doe</p>
+          </div>
+          <div className="flex">
+            <p className="font-semibold mr-2">Email:</p>
+            <p className="text-lg">johndoe@gmail.com</p>
+          </div>
+          <div className="flex">
+            <p className="font-semibold mr-2">Phone:</p>
+            <p className="text-lg">0912345678</p>
+          </div>
+        </div>
+      </div>
+
       {/* Total Price */}
       <div className="mt-6">
         <h2 className="text-xl font-semibold">Total Price</h2>
-        <p className="text-[#FFD700] text-lg">₱{state?.total?.toFixed(2)}</p>
+        <p className="text-[#FFD700] text-lg">₱{state?.price}</p>
       </div>
 
       {/* Back to Home Button */}

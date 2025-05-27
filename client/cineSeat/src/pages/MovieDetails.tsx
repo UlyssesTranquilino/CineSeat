@@ -5,6 +5,12 @@ import PersonIcon from "@mui/icons-material/Person";
 
 import SimilarMovies from "../components/SimilarMovies";
 
+//MUI
+import Skeleton from "@mui/material/Skeleton";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
+import { useUserStore } from "../global/mode";
+
 const MovieDetails = () => {
   const navigate = useNavigate();
   const handleBackClick = () => {
@@ -28,7 +34,7 @@ const MovieDetails = () => {
       window.scrollTo({
         top: 0,
         left: 0,
-        behavior: "instant", // 👈 This makes it immediate
+        behavior: "instant",
       });
       fetchMovieDetails(id);
     }
@@ -78,15 +84,30 @@ const MovieDetails = () => {
     return `https://www.youtube.com/embed/${videoId}?autoplay=0&mute=1&loop=1&playlist=${videoId}`;
   };
 
+  const { currentUser } = useUserStore();
+
+  // Hanlde Book Ticket
+  const handleBookTicket = () => {
+    if (!currentUser) {
+      navigate("/login");
+    } else navigate(`/movie/ticket/${movie._id}`);
+  };
   return (
     <div>
       {isSuccess ? (
         <div className="light:text-black">
-          <div className="rounded-md overflow-hidden relative text-left  h-55 sm:h-80 md:h-90 mt-3">
+          <div
+            onClick={handleBackClick}
+            className="flex items-start light:text-gray-400 text-gray-500 cursor-pointer py-2 px-2 mb-2 light:hover:bg-gray-100 light:hover:text-gray-500  hover:bg-gray-900 hover:text-gray-200 w-20 rounded-sm transition-all duration-200 ease-in-out "
+          >
+            <ArrowBackIcon />
+            Back
+          </div>
+          <div className="rounded-md overflow-hidden relative text-left  h-55 sm:h-80 md:h-90 lg:h-100 mt-3">
             <div
               className="absolute inset-0 left-10 z-4"
               style={{
-                backgroundImage: `url(${movie.backdropUrl})`,
+                backgroundImage: `url(${movie?.backdropUrl ?? ""})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 opacity: 1, // Adjust opacity here (0 to 1)
@@ -94,8 +115,8 @@ const MovieDetails = () => {
               }}
             />
 
-            <div className="absolute z-2 pl-[8%] pt-[4%] sm:pl-15 sm:pt-10 md:pt-14 ">
-              <h1 className="text-2xl sm:text-4xl font-bold w-40 sm:w-80 text-left text-white">
+            <div className="absolute z-2 pl-[8%] pt-[2%] sm:pl-15 sm:pt-10 md:pt-14 ">
+              <h1 className="text-2xl sm:text-4xl font-bold w-70 sm:w-80 text-left text-white">
                 {movie.title}
               </h1>
               <div className="flex items-center justify-start gap-[1px] -translate-x-1 sm:translate-x-4 sm:scale-110 sm:mt-1">
@@ -143,29 +164,24 @@ const MovieDetails = () => {
                 })}
               </h2>
 
-              <Link to={`/movie/ticket/${movie._id}`}>
-                <button className="bg-[#FFD700] rounded-sm mt-4 w-24 sm:w-30 lg:w-40 text-xs sm:text-[14px] sm:mt-7 text-black cursor-pointer font-semibold p-1 md:text-md lg:text-lg hover:shadow-lg shadow-yellow-500/50 transition-all duration-300 ease-in-out">
-                  Book Tickets
-                </button>
-              </Link>
+              <button
+                onClick={() => handleBookTicket()}
+                className="bg-[#FFD700] rounded-sm mt-4 w-24 sm:w-30 lg:w-40 text-xs sm:text-[14px] sm:mt-7 text-black cursor-pointer font-semibold p-1 md:text-md lg:text-lg hover:shadow-lg shadow-yellow-500/50 transition-all duration-300 ease-in-out"
+              >
+                Book Tickets
+              </button>
             </div>
 
             <div className="group-hover:hidden bg-gradient-to-r from-black to-transparent absolute z-1 h-full w-90 sm:w-140 md:w-160"></div>
-
-            {/* <img
-              src={movie.backdropUrl}
-              alt={movie.title}
-              className="opacity-40 rounded-md ml-10 md:ml-25 imgBanner"
-            /> */}
           </div>
 
-          <div className="px-5">
-            <h1 className="font-bold text-left mt-20 text-xl md:text-2xl">
+          <div className="px-5 mb-10">
+            <h1 className="font-bold text-left text-white light:text-black mt-20 text-xl md:text-2xl">
               Trailer
             </h1>
             <iframe
               src={getEmbedUrl(movie.trailerUrl)}
-              className="w-full h-70 rounded-lg mt-10 md:h-80 lg:h-100"
+              className="w-full max-w-200 mx-auto h-70 rounded-lg mt-10 md:h-80 lg:h-100"
               title="Trailer"
               allow="encrypted-media"
               frameBorder="0"
@@ -307,7 +323,220 @@ const MovieDetails = () => {
           </div>
         </div>
       ) : (
-        <div>Error</div>
+        <div>
+          <div className="py-2 w-20 h-12">
+            <div className="flex-shrink-0 overflow-hidden h-full w-full light:bg-gray-50 bg-gray-800/80">
+              <Skeleton
+                animation="wave"
+                variant="rectangular"
+                width="100%"
+                height="100%"
+              />
+            </div>
+          </div>
+
+          <div className="rounded-md h-55 sm:h-80 md:h-90 lg:h-100 mt-3 flex-shrink-0 overflow-hidden light:bg-gray-50 bg-gray-800/80">
+            <Skeleton
+              animation="wave"
+              variant="rectangular"
+              width="100%"
+              height="100%"
+            />
+          </div>
+
+          <div className="px-5 mb-10">
+            <div className="mt-20 w-20 h-9 flex-shrink-0 overflow-hidden  light:bg-gray-50 bg-gray-800/80">
+              <Skeleton
+                animation="wave"
+                variant="rectangular"
+                width="100%"
+                height="100%"
+              />
+            </div>
+
+            <div className="w-full max-w-200 mx-auto h-70 rounded-lg mt-10 md:h-80 lg:h-100 flex-shrink-0 overflow-hidden  light:bg-gray-50 bg-gray-800/80">
+              <Skeleton
+                animation="wave"
+                variant="rectangular"
+                width="100%"
+                height="100%"
+              />
+            </div>
+          </div>
+
+          <div className="px-5  grid grid-cols-4">
+            <div className="col-span-4 sm:col-span-3">
+              <div>
+                <div className="mt-20 w-30 h-10 flex-shrink-0 overflow-hidden  light:bg-gray-50 bg-gray-800/80">
+                  <Skeleton
+                    animation="wave"
+                    variant="rectangular"
+                    width="100%"
+                    height="100%"
+                  />
+                </div>
+
+                <div className="mt-5   sm:pr-5 w-full h-5 flex-shrink-0 overflow-hidden  light:bg-gray-50 bg-gray-800/80">
+                  <Skeleton
+                    animation="wave"
+                    variant="rectangular"
+                    width="100%"
+                    height="100%"
+                  />
+                </div>
+                <div className="mt-3   sm:pr-5 w-full h-5 flex-shrink-0 overflow-hidden  light:bg-gray-50 bg-gray-800/80">
+                  <Skeleton
+                    animation="wave"
+                    variant="rectangular"
+                    width="100%"
+                    height="100%"
+                  />
+                </div>
+                <div className="mt-3   sm:pr-5 w-full h-5 flex-shrink-0 overflow-hidden  light:bg-gray-50 bg-gray-800/80">
+                  <Skeleton
+                    animation="wave"
+                    variant="rectangular"
+                    width="100%"
+                    height="100%"
+                  />
+                </div>
+
+                <div className="my-15 w-50 h-80 mx-auto rounded-md md:w-60 sm:ml-10 flex-shrink-0 overflow-hidden  light:bg-gray-50 bg-gray-800/80">
+                  <Skeleton
+                    animation="wave"
+                    variant="rectangular"
+                    width="100%"
+                    height="100%"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between  items-center mt-10 md:mt-20">
+                  <div className="mt-3 w-20   sm:pr-5 h-6 flex-shrink-0 overflow-hidden  light:bg-gray-50 bg-gray-800/80">
+                    <Skeleton
+                      animation="wave"
+                      variant="rectangular"
+                      width="100%"
+                      height="100%"
+                    />
+                  </div>
+
+                  <div className="sm:mr-10 mt-3 w-17   sm:pr-5 h-6 flex-shrink-0 overflow-hidden  light:bg-gray-50 bg-gray-800/80">
+                    <Skeleton
+                      animation="wave"
+                      variant="rectangular"
+                      width="100%"
+                      height="100%"
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center justify-center sm:justify-start gap-10 mt-5 flex-wrap">
+                  {Array.from({ length: 10 }).map((cast: any) => (
+                    <div
+                      key={cast}
+                      className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-all duration-300 transform hover:scale-105"
+                    >
+                      <div className="rounded-full h-18 w-18 flex-shrink-0 overflow-hidden  light:bg-gray-50 bg-gray-800/80">
+                        <Skeleton
+                          animation="wave"
+                          variant="rectangular"
+                          width="100%"
+                          height="100%"
+                        />
+                      </div>
+
+                      <div className="w-25 h-5 flex-shrink-0 overflow-hidden  light:bg-gray-50 bg-gray-800/80">
+                        <Skeleton
+                          animation="wave"
+                          variant="rectangular"
+                          width="100%"
+                          height="100%"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between  items-center mt-10 ">
+                  <div className="mt-3 w-20   sm:pr-5 h-6 flex-shrink-0 overflow-hidden  light:bg-gray-50 bg-gray-800/80">
+                    <Skeleton
+                      animation="wave"
+                      variant="rectangular"
+                      width="100%"
+                      height="100%"
+                    />
+                  </div>
+
+                  <div className="sm:mr-10 mt-3 w-17   sm:pr-5 h-6 flex-shrink-0 overflow-hidden  light:bg-gray-50 bg-gray-800/80">
+                    <Skeleton
+                      animation="wave"
+                      variant="rectangular"
+                      width="100%"
+                      height="100%"
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center justify-center sm:justify-start gap-10 mt-5 flex-wrap">
+                  {Array.from({ length: 6 }).map((cast: any) => (
+                    <div
+                      key={cast}
+                      className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-all duration-300 transform hover:scale-105"
+                    >
+                      <div className="rounded-full h-18 w-18 flex-shrink-0 overflow-hidden  light:bg-gray-50 bg-gray-800/80">
+                        <Skeleton
+                          animation="wave"
+                          variant="rectangular"
+                          width="100%"
+                          height="100%"
+                        />
+                      </div>
+
+                      <div className="w-25 h-5 flex-shrink-0 overflow-hidden  light:bg-gray-50 bg-gray-800/80">
+                        <Skeleton
+                          animation="wave"
+                          variant="rectangular"
+                          width="100%"
+                          height="100%"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="px-5 ">
+            <div className="mt-20 w-33 h-10 flex-shrink-0 overflow-hidden  light:bg-gray-50 bg-gray-800/80">
+              <Skeleton
+                animation="wave"
+                variant="rectangular"
+                width="100%"
+                height="100%"
+              />
+            </div>
+            <div className="grid sm:grid-cols-2 gap-10 lg:gap-15 mt-10">
+              <div className="grid sm:grid-cols-2 gap-10 lg:gap-15 mt-10">
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className=" w-full h-32 flex-shrink-0 overflow-hidden light:bg-gray-50 bg-gray-800/80 rounded-sm"
+                  >
+                    <Skeleton
+                      animation="wave"
+                      variant="rectangular"
+                      width="100%"
+                      height="100%"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

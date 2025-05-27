@@ -18,6 +18,10 @@ const drawerWidth = 240;
 const Navbar = () => {
   const { isDarkMode, toggleTheme } = useTheme();
 
+  // Check if in auth route
+  const isAuthRoute =
+    location.pathname === "/login" || location.pathname === "/signup";
+
   //Drawer
   const [mobileOpen, setMobileOpen] = useState(false);
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
@@ -61,63 +65,8 @@ const Navbar = () => {
         </div>
       </Link>
 
-      <div className="sm:hidden w-full   max-w-110 sm:max-w-70 md:max-w-100 lg:max-w-125 relative">
-        <div className="bg-[#363636] light:bg-gray-100 p-1 w-full flex items-center gap-2 rounded-md ">
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="w-full bg-transparent text-gray-200 light:text-gray-800 placeholder-[#9B9B9B] focus:outline-none px-2"
-            placeholder="Search Movies"
-          />
-          {isClearVisible && (
-            <CloseOutlinedIcon
-              onClick={() => {
-                setQuery("");
-                setIsClearVisible(false);
-              }}
-              className="text-gray-300 light:text-gray-500 cursor-pointer hover:text-white light:hover:text-black transition-colors duration-300"
-            />
-          )}
-          <SearchOutlinedIcon className="text-gray-300 light:text-gray-500 cursor-pointer hover:text-white light:hover:text-black transition-colors duration-300" />
-        </div>
-        {showDropdown && (
-          <div className="w-full  max-w-110 sm:max-w-80 md:max-w-115 lg:max-w-125  custom-scrollbar max-h-120  overflow-y-auto absolute left-0 mt-1 bg-[#363636] light:bg-gray-100  border-0 rounded-md shadow-lg z-50 overflow-hidden ">
-            {moviesFind.map((movie: any) => (
-              <Link to={`/movie/${movie._id}`} key={movie._id}>
-                <div
-                  className="light:hover:bg-gray-200 hover:bg-[#4C4C4C] flex items-center gap-4 p-2 rounded-md transition-all duration-300 cursor-pointer shadow-sm hover:shadow-sm"
-                  onClick={handleSelectMovie}
-                >
-                  {/* Movie Poster */}
-                  <div className="w-12 h-12 rounded-md overflow-hidden bg-gray-300">
-                    <img
-                      src={movie.posterUrl}
-                      alt={movie.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-
-                  {/* Movie Title */}
-                  <h1
-                    className="text-left font-medium text-gray-800 dark:text-gray-100 truncate w-full light:text-black"
-                    style={{
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
-                  >
-                    {movie.title}
-                  </h1>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Desktop Navigation */}
-      <div className="hidden sm:flex items-center gap-5 w-full justify-end">
-        <div className=" w-full   max-w-110 sm:max-w-70 md:max-w-100 lg:max-w-125 relative">
+      {!isAuthRoute && (
+        <div className="sm:hidden w-full   max-w-110 sm:max-w-70 md:max-w-100 lg:max-w-125 relative">
           <div className="bg-[#363636] light:bg-gray-100 p-1 w-full flex items-center gap-2 rounded-md ">
             <input
               value={query}
@@ -170,12 +119,73 @@ const Navbar = () => {
             </div>
           )}
         </div>
-        <Link to="/signup">
-          <h1 className="border-[#FD1513] hover:border-b-1">Sign up</h1>
-        </Link>
-        <Link to="login">
-          <h1 className="border-[#FD1513] hover:border-b-1">Log in</h1>
-        </Link>
+      )}
+
+      {/* Desktop Navigation */}
+      <div className="hidden sm:flex items-center gap-5 w-full justify-end ">
+        {!isAuthRoute && (
+          <div className="sm:flex items-center gap-5 w-full justify-end ">
+            <div className=" w-full   max-w-110 sm:max-w-70 md:max-w-100 lg:max-w-125 relative">
+              <div className="bg-[#363636] light:bg-gray-100 p-1 w-full flex items-center gap-2 rounded-md ">
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  className="w-full bg-transparent text-gray-200 light:text-gray-800 placeholder-[#9B9B9B] focus:outline-none px-2"
+                  placeholder="Search Movies"
+                />
+                {isClearVisible && (
+                  <CloseOutlinedIcon
+                    onClick={() => {
+                      setQuery("");
+                      setIsClearVisible(false);
+                    }}
+                    className="text-gray-300 light:text-gray-500 cursor-pointer hover:text-white light:hover:text-black transition-colors duration-300"
+                  />
+                )}
+                <SearchOutlinedIcon className="text-gray-300 light:text-gray-500 cursor-pointer hover:text-white light:hover:text-black transition-colors duration-300" />
+              </div>
+              {showDropdown && (
+                <div className="w-full  max-w-110 sm:max-w-80 md:max-w-115 lg:max-w-125  custom-scrollbar max-h-120  overflow-y-auto absolute left-0 mt-1 bg-[#363636] light:bg-gray-100  border-0 rounded-md shadow-lg z-50 overflow-hidden ">
+                  {moviesFind.map((movie: any) => (
+                    <Link to={`/movie/${movie._id}`} key={movie._id}>
+                      <div
+                        className="light:hover:bg-gray-200 hover:bg-[#4C4C4C] flex items-center gap-4 p-2 rounded-md transition-all duration-300 cursor-pointer shadow-sm hover:shadow-sm"
+                        onClick={handleSelectMovie}
+                      >
+                        {/* Movie Poster */}
+                        <div className="w-12 h-12 rounded-md overflow-hidden bg-gray-300">
+                          <img
+                            src={movie.posterUrl}
+                            alt={movie.title}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+
+                        {/* Movie Title */}
+                        <h1
+                          className="text-left font-medium text-gray-800 dark:text-gray-100 truncate w-full light:text-black"
+                          style={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          {movie.title}
+                        </h1>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+            <Link to="/signup">
+              <h1 className="border-[#FD1513] hover:border-b-1">Sign up</h1>
+            </Link>
+            <Link to="login">
+              <h1 className="border-[#FD1513] hover:border-b-1">Log in</h1>
+            </Link>
+          </div>
+        )}
 
         <div onClick={toggleTheme} className="cursor-pointer">
           {isDarkMode ? (

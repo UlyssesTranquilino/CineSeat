@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useTheme } from "../global/mode";
+import { Skeleton } from "@mui/material";
 
 const BookTickets = () => {
   const { isDarkMode } = useTheme();
@@ -212,7 +213,118 @@ const BookTickets = () => {
           </div>
         </div>
       ) : (
-        <div>Loading</div>
+        <div className="px-5 mt-10 mb">
+          <div className="h-12 w-40 flex-shrink-0 overflow-hidden light:bg-gray-50 bg-gray-800/80">
+            <Skeleton
+              animation="wave"
+              variant="rectangular"
+              width="100%"
+              height="100%"
+            />
+          </div>
+
+          {/* Genre Tags Skeleton */}
+          <div className="flex flex-wrap gap-3 my-5">
+            {Array.from({ length: 2 }).map((_, index) => (
+              <div className="h-10 w-22 flex-shrink-0 overflow-hidden light:bg-gray-50 bg-gray-800/80">
+                <Skeleton
+                  animation="wave"
+                  variant="rectangular"
+                  width="100%"
+                  height="100%"
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Date Skeleton */}
+          <div className="flex flex-wrap gap-3 mb-10">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div className="h-25 w-22 flex-shrink-0 overflow-hidden light:bg-gray-50 bg-gray-800/80">
+                <Skeleton
+                  animation="wave"
+                  variant="rectangular"
+                  width="100%"
+                  height="100%"
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Showtimes Table Skeleton */}
+          <div className="">
+            <table className="w-full border-collapse border border-gray-400">
+              <thead>
+                <tr className="bg-gray-900/80 light:bg-gray-200 ">
+                  <th className="border border-gray-700 p-4 text-left">
+                    <div className="h-8 w-30 flex-shrink-0 overflow-hidden light:bg-gray-50 bg-gray-800/80">
+                      <Skeleton
+                        animation="wave"
+                        variant="rectangular"
+                        width="100%"
+                        height="100%"
+                      />
+                    </div>
+                  </th>
+                  <th className="border border-gray-700 p-4 text-left">
+                    <div className="h-8 w-22 flex-shrink-0 overflow-hidden light:bg-gray-50 bg-gray-800/80">
+                      <Skeleton
+                        animation="wave"
+                        variant="rectangular"
+                        width="100%"
+                        height="100%"
+                      />
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {[1, 2, 3].map((row) => (
+                  <tr key={row}>
+                    {/* Location Cell */}
+                    <td className="border border-gray-700 w-40 md:w-65">
+                      {" "}
+                      <div className="flex flex-col items-center justify-center gap-3">
+                        <div className="h-7 w-30 flex-shrink-0 overflow-hidden light:bg-gray-50 bg-gray-800/80">
+                          <Skeleton
+                            animation="wave"
+                            variant="rectangular"
+                            width="100%"
+                            height="100%"
+                          />
+                        </div>
+                        <div className="h-5 w-20 flex-shrink-0 overflow-hidden light:bg-gray-50 bg-gray-800/80">
+                          <Skeleton
+                            animation="wave"
+                            variant="rectangular"
+                            width="100%"
+                            height="100%"
+                          />
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* Showtimes Cell */}
+                    <td className="border border-gray-700 p-4">
+                      <div className="flex gap-2 flex-wrap">
+                        {[1, 2, 3].map((time) => (
+                          <div className="h-20 w-20 flex-shrink-0 overflow-hidden light:bg-gray-50 bg-gray-800/80">
+                            <Skeleton
+                              animation="wave"
+                              variant="rectangular"
+                              width="100%"
+                              height="100%"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       )}
     </section>
   );

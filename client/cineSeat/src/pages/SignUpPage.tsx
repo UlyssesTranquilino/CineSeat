@@ -9,15 +9,15 @@ const SignUpPage = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
   return (
-    <div className="p-5 sm:p-10 rounded-sm bg-[#1A1A1A] w-fuil text-white mt-15 max-w-[500px] mx-auto">
-      <h2 className="text-left text-xl font-semibold md:text-2xl">
+    <div className="p-5 sm:p-10 rounded-sm bg-[#1A1A1A] w-fuil light:bg-gray-100 w-fuil text-white light:text-black  mt-15 max-w-[500px] mx-auto">
+      <h2 className="text-center text-xl font-semibold md:text-2xl">
         Create an Account
       </h2>
       <form className="mt-5 flex flex-col gap-2">
         <div className="mb-3">
           <label
             htmlFor="name"
-            className="block text-sm text-gray-200 mb-2 text-left "
+            className="block text-sm text-gray-200  light:text-gray-900 mb-2 text-left "
           >
             Name
           </label>
@@ -34,7 +34,7 @@ const SignUpPage = () => {
         <div className="mb-3">
           <label
             htmlFor="name"
-            className="block text-sm text-gray-200 mb-2 text-left "
+            className="block text-sm text-gray-200  light:text-gray-900 mb-2 text-left "
           >
             Email
           </label>
@@ -51,7 +51,7 @@ const SignUpPage = () => {
         <div className="mb-3">
           <label
             htmlFor="name"
-            className="block text-sm text-gray-200 mb-2 text-left "
+            className="block text-sm text-gray-200  light:text-gray-900 mb-2 text-left "
           >
             Password
           </label>
@@ -68,7 +68,7 @@ const SignUpPage = () => {
         <div className="mb-3">
           <label
             htmlFor="name"
-            className="block text-sm text-gray-200 mb-2 text-left "
+            className="block text-sm text-gray-200  light:text-gray-900 mb-2 text-left "
           >
             Confirm Password
           </label>
@@ -82,15 +82,17 @@ const SignUpPage = () => {
           />
         </div>
 
-        <button className="rounded-sm bg-[#FD1513] h-10 font-semibold mt-3">
+        <button className="text-black light:text-white rounded-sm bg-[#FD1513] h-10 font-semibold mt-3">
           Sign Up
         </button>
       </form>
 
       <div className="mt-3 flex items-center justify-center gap-3">
-        <p className="text-sm text-gray-300">Already have an account?</p>
+        <p className="text-sm text-gray-300  light:text-gray-900">
+          Already have an account?
+        </p>
         <Link to="/login">
-          <span className="text-[#FD1513] hover:border-b-1">Log in</span>
+          <span className="text-[#FD1513] hover:border-b-1 ">Log in</span>
         </Link>
       </div>
     </div>

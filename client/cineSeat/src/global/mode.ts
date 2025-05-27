@@ -1,9 +1,40 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import axios from "axios";
 
 interface Theme {
   isDarkMode: boolean;
   toggleTheme: () => void;
+}
+
+export interface Review {
+  movieId: string;
+  rating: number; // between 1 and 10
+  review?: string;
+  createdAt?: Date;
+}
+
+export interface Booking {
+  movieId: string;
+  showtimeId: string;
+  theaterName?: string;
+  seats: string[];
+  totalPrice?: number;
+  bookingDate?: Date;
+}
+
+export interface User {
+  _id?: string;
+  username: string;
+  email: string;
+  password: string;
+
+  favorites: string[];
+  watchlist: string[];
+  reviews: Review[];
+  bookings: Booking[];
+
+  createdAt?: Date;
 }
 
 export const useTheme = create<Theme>()(
@@ -50,6 +81,105 @@ export const useMovieStore = create(
         movies: state.movies,
         lastFetched: state.lastFetched,
       }),
+    }
+  )
+);
+
+export const useUserStore = create(
+  persist(
+    (
+      set: any,
+      get: () => {
+        isLoading: any;
+      }
+    ) => ({
+      currentUser: null,
+      isLoading: null,
+      error: null,
+      favorites: [],
+      watchlist: [],
+      reviews: [],
+      tickets: [],
+
+      // Set current user
+      setCurrentUser: (user: User) => {
+        set({ currentUser: user });
+      },
+
+      // Login user
+      loginUser: async (
+        previousState: string | undefined,
+        formData: FormData
+      ) => {
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
+
+        if (!password || !email) {
+          return { success: false, message: "Please fill in all fields." };
+        }
+
+        set({
+          isLoading: true,
+          error: null,
+          currentUser: null,
+        });
+
+        // Add a timeout to prevent infinite loading
+        const timeoutId = setTimeout(() => {
+          if (useUserStore.getState().isLoading) {
+            set({
+              isLoading: false,
+              error: "Request timed out. Please try again.",
+            });
+          }
+          // 10 second timeout
+        }, 10000);
+
+        try {
+          const res = await axios.post(`http://localhost:5000/api/user/login`, {
+            email,
+            password,
+          });
+
+          clearTimeout(timeoutId); // Clear the timeout if request completes
+
+          const token = res.data.token;
+          const user = res.data.user;
+
+          if (!token || !user) {
+            throw new Error("Invalid response from server");
+          }
+
+          localStorage.setItem("token", token);
+          set({
+            currentUser: user,
+            isLoading: false,
+            error: null,
+          });
+        } catch (error: Error | any) {
+          // Clear the timeout if request completes
+          clearTimeout(timeoutId);
+
+          let errorMessage = "Login failed. Please try again.";
+          if (error.response) {
+            errorMessage = error.response.data?.error || errorMessage;
+          } else if (error.request) {
+            errorMessage = "Network error. Please check your connection.";
+          }
+
+          // Clear any invalid token
+          localStorage.removeItem("token");
+
+          set({
+            isLoading: false,
+            error: "Failed to login. Please check your credentials.",
+          });
+        }
+      },
+    }),
+    {
+      name: "user-storage",
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );

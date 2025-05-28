@@ -63,7 +63,7 @@ const LoginPage = () => {
 
         <button
           type="submit"
-          className="cursor-pointer rounded-sm bg-[#FD1513] hover:bg-[#fd1713c7] h-10 font-semibold mt-3 text-black light:text-white"
+          className="cursor-pointer rounded-sm bg-[#FD1513]  hover:bg-[#D90D0B]  h-10 font-semibold mt-3 text-black light:text-white"
         >
           Log in
         </button>

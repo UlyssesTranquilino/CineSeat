@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "../global/mode";
 
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
@@ -17,8 +17,8 @@ const drawerWidth = 240;
 
 const Navbar = () => {
   const { isDarkMode, toggleTheme } = useTheme();
+  const location = useLocation();
 
-  // Check if in auth route
   const isAuthRoute =
     location.pathname === "/login" || location.pathname === "/signup";
 

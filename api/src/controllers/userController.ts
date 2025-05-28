@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import User from "../models/UserModel";
+import jwt from "jsonwebtoken";
 
 const UserController = {
   // Register
   registerUser: async (req: any, res: any) => {
     try {
-      const { username, email, password } = req.body;
+      const { name, email, password } = req.body;
 
       const existingUser = await User.findOne({ email });
       if (existingUser)
@@ -14,10 +15,20 @@ const UserController = {
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      const newUser = new User({ username, email, password: hashedPassword });
+      const newUser = new User({ name, email, password: hashedPassword });
       await newUser.save();
 
-      res.status(201).json({ message: "User created successfully." });
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET!, {
+        expiresIn: "1d",
+      });
+
+      console.log("USER REGISTERD");
+
+      const { password: _, ...safeUser } = newUser.toObject();
+
+      res
+        .status(201)
+        .json({ message: "User created successfully.", user: safeUser, token });
     } catch (err) {
       res.status(500).json({ error: (err as Error).message });
     }
@@ -25,7 +36,6 @@ const UserController = {
 
   // Login
   loginUser: async (req: any, res: any) => {
-    console.log("HELLO");
     try {
       const { email, password } = req.body;
 
@@ -38,7 +48,7 @@ const UserController = {
 
       res.status(200).json({
         message: "Login successful.",
-        user: { id: user._id, username: user.username },
+        user: { id: user._id, name: user.name },
       });
     } catch (err) {
       res.status(500).json({ error: (err as Error).message });
@@ -70,11 +80,11 @@ const UserController = {
   // Update user
   updateUser: async (req: any, res: any) => {
     try {
-      const { username, email } = req.body;
+      const { name, email } = req.body;
 
       const user = await User.findByIdAndUpdate(
         req.params.id,
-        { username, email },
+        { name, email },
         { new: true }
       ).select("-password");
 
@@ -115,6 +125,16 @@ const UserController = {
       await user.save();
 
       res.status(200).json(user.favorites);
+    } catch (err) {
+      res.status(500).json({ error: (err as Error).message });
+    }
+  },
+
+  // Delete all users
+  deleteAllUsers: async (_: Request, res: Response) => {
+    try {
+      await User.deleteMany({});
+      res.status(200).json({ message: "All users deleted successfully." });
     } catch (err) {
       res.status(500).json({ error: (err as Error).message });
     }

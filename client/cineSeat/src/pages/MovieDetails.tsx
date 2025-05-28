@@ -22,7 +22,7 @@ const MovieDetails = () => {
   const [isSuccess, setIsSuccess] = useState(false);
 
   const fetchMovieDetails = async (id: string) => {
-    const res = await fetch(`http://localhost:5000/${id}`);
+    const res = await fetch(`http://localhost:5000/api/movies/${id}`);
 
     const { data, success } = await res.json();
     setIsSuccess(success);

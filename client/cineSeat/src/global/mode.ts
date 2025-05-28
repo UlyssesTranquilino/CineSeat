@@ -63,7 +63,7 @@ export const useMovieStore = create(
         if (Date.now() - get().lastFetched < TEN_MINUTES) return; // Avoid frequent fetching
 
         try {
-          const res = await fetch("http://localhost:5000");
+          const res = await fetch("http://localhost:5000/api/movies");
           const data = await res.json();
 
           console.log("RES: ", res);
@@ -156,11 +156,97 @@ export const useUserStore = create(
             isLoading: false,
             error: null,
           });
+
+          console.log("LOGIN");
         } catch (error: Error | any) {
           // Clear the timeout if request completes
           clearTimeout(timeoutId);
 
           let errorMessage = "Login failed. Please try again.";
+          if (error.response) {
+            errorMessage = error.response.data?.error || errorMessage;
+          } else if (error.request) {
+            errorMessage = "Network error. Please check your connection.";
+          }
+
+          // Clear any invalid token
+          localStorage.removeItem("token");
+
+          set({
+            isLoading: false,
+            error: "Failed to login. Please check your credentials.",
+          });
+        }
+      },
+
+      // Register User
+      registerUser: async (
+        previousState: string | undefined,
+        formData: FormData
+      ) => {
+        const name = formData.get("name") as string;
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
+        const confirmPassword = formData.get("confirmPassword") as string;
+
+        if (password != confirmPassword) {
+          return {
+            success: false,
+            message: "Passwords do not match",
+          };
+        }
+
+        set({
+          isLoading: true,
+          error: null,
+          currentUser: null,
+        });
+
+        // Add a timeout to prevent infinite loading
+        const timeoutId = setTimeout(() => {
+          if (useUserStore.getState().isLoading) {
+            set({
+              isLoading: false,
+              error: "Request timed out. Please try again.",
+            });
+          }
+          // 10 second timeout
+        }, 10000);
+
+        try {
+          const res = await axios.post(
+            `http://localhost:5000/api/user/register`,
+            {
+              name,
+              email,
+              password,
+            }
+          );
+
+          clearTimeout(timeoutId);
+
+          const token = res.data.token;
+
+          if (!token) {
+            throw new Error("Invalid response from server");
+          }
+
+          console.log("RES: ", res);
+
+          localStorage.setItem("token", token);
+          set({
+            currentUser: res.data.user,
+            isLoading: false,
+            error: null,
+          });
+
+          return null; // Return null for useActionState
+        } catch (error: Error | any) {
+          // Clear the timeout if request completes
+          clearTimeout(timeoutId);
+
+          let errorMessage = "Signup failed. Please try again.";
+
           if (error.response) {
             errorMessage = error.response.data?.error || errorMessage;
           } else if (error.request) {

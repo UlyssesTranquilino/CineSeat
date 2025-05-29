@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "../global/mode";
 
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
@@ -11,11 +11,13 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { Drawer, IconButton } from "@mui/material";
 
-import { useMovieStore } from "../global/mode";
+import { useMovieStore, useUserStore } from "../global/mode";
 
 const drawerWidth = 240;
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const { currentUser, signOutUser } = useUserStore();
   const { isDarkMode, toggleTheme } = useTheme();
   const location = useLocation();
 
@@ -56,6 +58,10 @@ const Navbar = () => {
     setShowDropdown(false);
   };
 
+  const handleSignOut = () => {
+    signOutUser();
+    navigate("/login");
+  };
   return (
     <nav className="flex items-center justify-between px-2 h-14  text-white light:text-black  ">
       <Link to="/">
@@ -178,12 +184,17 @@ const Navbar = () => {
                 </div>
               )}
             </div>
-            <Link to="/signup">
-              <h1 className="border-[#FD1513] hover:border-b-1">Sign up</h1>
-            </Link>
-            <Link to="login">
-              <h1 className="border-[#FD1513] hover:border-b-1">Log in</h1>
-            </Link>
+
+            {!currentUser && (
+              <>
+                <Link to="/signup">
+                  <h1 className="border-[#FD1513] hover:border-b-1">Sign up</h1>
+                </Link>
+                <Link to="login">
+                  <h1 className="border-[#FD1513] hover:border-b-1">Log in</h1>
+                </Link>
+              </>
+            )}
           </div>
         )}
 
@@ -194,6 +205,12 @@ const Navbar = () => {
             <DarkModeOutlinedIcon className="pages light:hover:text-blue-800 transition-colors duration-200" />
           )}
         </div>
+
+        {currentUser && (
+          <button onClick={handleSignOut}>
+            <h1 className="border-[#FD1513] hover:border-b-1">Sign out</h1>
+          </button>
+        )}
       </div>
 
       {/* Mobile Navigation */}
@@ -215,12 +232,16 @@ const Navbar = () => {
         }}
       >
         <div className=" items-center gap-5  flex flex-col pt-10 text-white light:text-black">
-          <Link to="/signup">
-            <h1 className="border-[#FD1513] hover:border-b-1">Sign up</h1>
-          </Link>
-          <Link to="login">
-            <h1 className="border-[#FD1513] hover:border-b-1">Log in</h1>
-          </Link>
+          {!currentUser && (
+            <>
+              <Link to="/signup">
+                <h1 className="border-[#FD1513] hover:border-b-1">Sign up</h1>
+              </Link>
+              <Link to="login">
+                <h1 className="border-[#FD1513] hover:border-b-1">Log in</h1>
+              </Link>
+            </>
+          )}
 
           {/* Theme Toggle in Drawer */}
           <div onClick={toggleTheme} className="cursor-pointer">
@@ -230,6 +251,12 @@ const Navbar = () => {
               <DarkModeOutlinedIcon className="pages light:text-black light:hover:text-blue-800 transition-colors duration-200" />
             )}
           </div>
+
+          {currentUser && (
+            <button onClick={handleSignOut}>
+              <h1 className="border-[#FD1513] hover:border-b-1">Sign out</h1>
+            </button>
+          )}
         </div>
       </Drawer>
     </nav>

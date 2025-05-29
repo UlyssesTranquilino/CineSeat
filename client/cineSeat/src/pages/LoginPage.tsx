@@ -1,15 +1,20 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useActionState } from "react";
 import { useUserStore } from "../global/mode";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const { loginUser } = useUserStore();
 
   const [errorMessage, formAction, isPending] = useActionState(
     loginUser,
     undefined
   );
+
+  useEffect(() => {
+    if (!isPending && errorMessage === null) navigate("/");
+  }, [errorMessage, isPending, navigate]);
 
   return (
     <div className="p-5 sm:p-10 rounded-sm bg-[#1A1A1A] light:bg-gray-100 w-fuil text-white light:text-black mt-15 max-w-[500px] mx-auto">

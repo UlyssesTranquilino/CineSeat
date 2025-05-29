@@ -12,6 +12,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useUserStore } from "../global/mode";
 
 const MovieDetails = () => {
+  const { currentUser } = useUserStore();
   const navigate = useNavigate();
   const handleBackClick = () => {
     navigate(-1);
@@ -83,8 +84,6 @@ const MovieDetails = () => {
     const videoId = url.split("v=")[1]?.split("&")[0];
     return `https://www.youtube.com/embed/${videoId}?autoplay=0&mute=1&loop=1&playlist=${videoId}`;
   };
-
-  const { currentUser } = useUserStore();
 
   // Hanlde Book Ticket
   const handleBookTicket = () => {

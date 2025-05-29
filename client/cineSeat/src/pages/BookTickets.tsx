@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useTheme } from "../global/mode";
 import { Skeleton } from "@mui/material";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 const BookTickets = () => {
   const { isDarkMode } = useTheme();
@@ -15,7 +16,7 @@ const BookTickets = () => {
   const [isSuccess, setIsSuccess] = useState(false);
 
   const fetchMovieDetails = async (id: string) => {
-    const res = await fetch(`http://localhost:5000/${id}`);
+    const res = await fetch(`http://localhost:5000/api/movies/${id}`);
 
     const { data, success } = await res.json();
     setIsSuccess(success);
@@ -96,9 +97,16 @@ const BookTickets = () => {
     <section>
       {isSuccess ? (
         <div className="px-5 mt-10">
-          <h1 className="text-2xl sm:text-4xl font-bold text-left text-white light:text-black">
-            {movie.title}
-          </h1>
+          <div className="flex items-center gap-3">
+            <div onClick={() => navigate(-1)} className="cursor-pointer">
+              <ArrowBackIosIcon className="mb-1 text-white light:text-black" />
+            </div>
+            <div>
+              <h1 className="text-2xl sm:text-4xl font-bold text-left text-white light:text-black">
+                {movie.title}
+              </h1>
+            </div>
+          </div>
 
           <div className="text-white flex flex-wrap items-center text-[13px] sm:text-[15px] gap-2 mt-3">
             {movie.genre.map((genre: string) => (
@@ -110,7 +118,6 @@ const BookTickets = () => {
               </div>
             ))}
           </div>
-
           {/* Date Selection */}
           <div className="mt-5 flex gap-3">
             {days.map((day: any) => (

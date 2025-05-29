@@ -2,8 +2,11 @@ import { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
+import { Toaster, toast } from "react-hot-toast";
+import { useTheme } from "../global/mode";
 const Seat = () => {
   const navigate = useNavigate();
+  const { isDarkMode } = useTheme();
 
   const { state } = useLocation();
   const [seats, setSeats] = useState(1);
@@ -37,8 +40,30 @@ const Seat = () => {
   const rowCount = 9;
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
+  const handleProceedPayment = () => {
+    if (selectedSeats.length < 1) {
+      toast.success("Please select at least one seat.", {
+        style: isDarkMode
+          ? {
+              border: "1px solid #b91c1c",
+              color: "#fff",
+              backgroundColor: "#1f2937",
+            }
+          : {
+              border: "1px solid #ef4444",
+              color: "#000",
+              backgroundColor: "#fef2f2",
+            },
+        iconTheme: isDarkMode
+          ? { primary: "#ef4444", secondary: "#fef2f2" }
+          : { primary: "#dc2626", secondary: "#fef2f2" },
+      });
+    }
+  };
+
   return (
     <div className="px-4 sm:px-8 mt-5 text-left">
+      <Toaster position="top-center" reverseOrder={false} />
       {/* Back Button and Title */}
       <div className="flex items-center gap-3">
         <div onClick={() => navigate(-1)} className="cursor-pointer">
@@ -217,23 +242,39 @@ const Seat = () => {
       {/* Check Out */}
 
       <div className="mt-20 flex items-center justify-center">
-        <Link
-          to={`/movie/payment/${state.id}`}
-          state={{
-            id: state.id,
-            title: state.title,
-            day: state.day,
-            time: state.time,
-            seats: selectedSeats,
-            totalPrice: selectedSeats.length * state.price,
-            image: state.image,
-            genre: state.genre,
-          }}
-        >
-          <button className="bg-[#FFD700] rounded-sm p-2 mt-4 w-full max-w-50 text-xs sm:text-[14px] sm:text-lg sm:mt-7 text-black cursor-pointer font-semibold md:text-md lg:text-lg hover:shadow-lg shadow-yellow-500/50 transition-all duration-300 ease-in-out">
+        {selectedSeats.length > 0 ? (
+          <Link
+            to={`/movie/payment/${state.id}`}
+            state={{
+              id: state.id,
+              title: state.title,
+              day: state.day,
+              time: state.time,
+              seats: selectedSeats,
+              totalPrice: selectedSeats.length * state.price,
+              image: state.image,
+              genre: state.genre,
+            }}
+            className="w-full max-w-sm" // Ensures consistent button width
+          >
+            <button
+              className="cursor-pointer w-full px-6 py-3 rounded-md font-semibold text-sm sm:text-base md:text-lg 
+                   text-black bg-yellow-400 hover:bg-yellow-500 transition-all duration-300 
+                   shadow-md hover:shadow-yellow-500/50"
+            >
+              Proceed to Payment
+            </button>
+          </Link>
+        ) : (
+          <button
+            onClick={handleProceedPayment}
+            className="w-full max-w-sm px-6 py-3 rounded-md font-semibold text-sm sm:text-base md:text-lg 
+                 bg-gray-300 text-gray-500 dark:bg-gray-800 dark:text-gray-400
+                 transition-all duration-300"
+          >
             Proceed to Payment
           </button>
-        </Link>
+        )}
       </div>
     </div>
   );

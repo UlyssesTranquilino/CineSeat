@@ -114,6 +114,8 @@ export const useUserStore = create(
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
 
+        console.log(email, password);
+
         if (!password || !email) {
           return { success: false, message: "Please fill in all fields." };
         }
@@ -143,6 +145,8 @@ export const useUserStore = create(
 
           clearTimeout(timeoutId); // Clear the timeout if request completes
 
+          console.log("RES: ", res);
+
           const token = res.data.token;
           const user = res.data.user;
 
@@ -157,7 +161,7 @@ export const useUserStore = create(
             error: null,
           });
 
-          console.log("LOGIN");
+          return null;
         } catch (error: Error | any) {
           // Clear the timeout if request completes
           clearTimeout(timeoutId);
@@ -261,6 +265,20 @@ export const useUserStore = create(
             error: "Failed to login. Please check your credentials.",
           });
         }
+      },
+
+      // Sign out User
+      signOutUser: () => {
+        localStorage.removeItem("token"); // Remove token
+        set({
+          currentUser: null,
+          isLoading: false,
+          error: null,
+          favorites: [],
+          watchlist: [],
+          reviews: [],
+          tickets: [],
+        });
       },
     }),
     {

@@ -15,7 +15,6 @@ const SignUpPage = () => {
 
   useEffect(() => {
     if (!isPending && errorMessage === null) navigate("/login");
-    else console.log("NOT");
   }, [errorMessage, isPending, navigate]);
 
   return (

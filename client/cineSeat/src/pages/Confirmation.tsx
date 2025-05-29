@@ -2,77 +2,131 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const Confirmation = () => {
-  const { state } = useLocation(); // Receives data from Payment component
+  const { state } = useLocation();
   const navigate = useNavigate();
 
   return (
-    <div className="px-4 sm:px-8 mt-5 text-left text-white light:text-black">
-      <h1 className="text-3xl font-bold">Booking Confirmation</h1>
-      <p className="mt-2 text-lg">
-        Your booking has been successfully processed.
-      </p>
-
-      {/* Movie Details */}
-      <div className="mt-6">
-        <h2 className="text-xl font-semibold">Movie Details</h2>
-        <p className="mt-1 text-lg">{state?.title}</p>
-        <p className="text-gray-400">
-          {state?.day?.week}, {state?.day?.month} {state?.day?.day} |{" "}
-          {state?.time}
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
+      {/* Confirmation Header */}
+      <div className="text-center mb-8">
+        <div className="w-16 h-16 bg-red-700 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-8 w-8 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        </div>
+        <h1 className="text-3xl font-bold light:text-gray-900 text-white">
+          Booking Confirmed!
+        </h1>
+        <p className="mt-2 text-lg light:text-gray-600 text-gray-300">
+          Your tickets have been successfully booked.
         </p>
       </div>
 
-      {/* Selected Seats */}
-      <div className="mt-6">
-        <h2 className="text-xl font-semibold">Selected Seats</h2>
-        <div className="flex gap-2 mt-2">
-          {state?.seats?.length > 0 ? (
-            state.seats.map((seat) => (
-              <div
-                key={seat}
-                className="border p-3 w-10 h-10 flex items-center justify-center rounded-md"
-              >
-                {seat}
-              </div>
-            ))
-          ) : (
-            <p>No seats selected</p>
-          )}
+      {/* Ticket Card */}
+      <div className="light:bg-white bg-gray-800/40 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 mb-8">
+        {/* Movie Details */}
+        <div className="p-6 border-b light:border-gray-200 border-gray-700">
+          <h2 className="text-xl font-bold light:text-gray-900 text-white mb-2">
+            {state?.title}
+          </h2>
+          <p className="light:text-red-600 text-red-400 font-medium">
+            {state?.day?.week}, {state?.day?.month} {state?.day?.day} |{" "}
+            {state?.time}
+          </p>
+        </div>
+
+        {/* Seats Section */}
+        <div className="p-6 border-b light:border-gray-200 border-gray-700">
+          <h3 className="text-lg font-semibold light:text-gray-900 text-white mb-3">
+            Your Seats
+          </h3>
+          <div className="flex flex-wrap gap-3">
+            {state?.seats?.length > 0 ? (
+              state.seats.map((seat) => (
+                <div
+                  key={seat}
+                  className="light:bg-red-100 bg-red-900/30 light:text-red-800 text-red-200 font-medium px-3 py-2 rounded-md border light:border-red-200 border-red-800"
+                >
+                  {seat}
+                </div>
+              ))
+            ) : (
+              <p className="light:text-gray-500 text-gray-400">
+                No seats selected
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Customer Details */}
+        <div className="p-6 border-b light:border-gray-200 border-gray-700">
+          <h3 className="text-lg font-semibold light:text-gray-900 text-white mb-3">
+            Customer Details
+          </h3>
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span className="light:text-gray-600 text-gray-300">Name:</span>
+              <span className="font-medium light:text-gray-900 text-white">
+                John Doe
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="light:text-gray-600 text-gray-300">Email:</span>
+              <span className="font-medium light:text-gray-900 text-white">
+                johndoe@gmail.com
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="light:text-gray-600 text-gray-300">Phone:</span>
+              <span className="font-medium light:text-gray-900 text-white">
+                0912345678
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Total Price */}
+        <div className="p-6 light:bg-gray-50 bg-gray-700/20">
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-semibold light:text-gray-900 text-white">
+              Total Amount
+            </h3>
+            <p className="text-2xl font-bold light:text-red-700 text-red-400">
+              ₱{state?.price}
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Ticket Details */}
-      <div className="mt-6">
-        <h2 className="text-xl font-semibold">Ticket Details</h2>
-        <div className="flex flex-col space-y-2 mt-4">
-          <div className="flex">
-            <p className="font-semibold mr-2">Name:</p>
-            <p className="text-lg">John Doe</p>
-          </div>
-          <div className="flex">
-            <p className="font-semibold mr-2">Email:</p>
-            <p className="text-lg">johndoe@gmail.com</p>
-          </div>
-          <div className="flex">
-            <p className="font-semibold mr-2">Phone:</p>
-            <p className="text-lg">0912345678</p>
-          </div>
-        </div>
+      {/* Actions */}
+      <div className="text-center">
+        <button
+          onClick={() => navigate("/")}
+          className="cursor-pointer light:bg-red-600 light:hover:bg-red-700 bg-red-700 hover:bg-red-800 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+        >
+          Back to Home
+        </button>
+        <p className="mt-4 light:text-gray-600 text-gray-400">
+          Need help?{" "}
+          <a
+            href="#"
+            className="light:text-red-600 text-red-400 hover:underline"
+          >
+            Contact support
+          </a>
+        </p>
       </div>
-
-      {/* Total Price */}
-      <div className="mt-6">
-        <h2 className="text-xl font-semibold">Total Price</h2>
-        <p className="text-[#FFD700] text-lg">₱{state?.price}</p>
-      </div>
-
-      {/* Back to Home Button */}
-      <button
-        onClick={() => navigate("/")}
-        className="bg-[#FFD700] text-black font-semibold p-3 mt-6 w-full max-w-md rounded-md shadow-md hover:shadow-lg transition duration-300"
-      >
-        Back to Home
-      </button>
     </div>
   );
 };

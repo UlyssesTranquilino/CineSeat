@@ -1,9 +1,13 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useUserStore } from "../global/mode";
 
 const Confirmation = () => {
+  const { currentUser } = useUserStore();
   const { state } = useLocation();
   const navigate = useNavigate();
+
+  console.log("state: ", state, " Current user: ", currentUser);
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
@@ -40,6 +44,11 @@ const Confirmation = () => {
           <h2 className="text-xl font-bold light:text-gray-900 text-white mb-2">
             {state?.title}
           </h2>
+
+          <p className="light:text-red-600 text-red-400 font-medium">
+            {state?.theaterName} {state?.location} | Cinema {state?.screen}
+          </p>
+
           <p className="light:text-red-600 text-red-400 font-medium">
             {state?.day?.week}, {state?.day?.month} {state?.day?.day} |{" "}
             {state?.time}
@@ -78,19 +87,13 @@ const Confirmation = () => {
             <div className="flex justify-between">
               <span className="light:text-gray-600 text-gray-300">Name:</span>
               <span className="font-medium light:text-gray-900 text-white">
-                John Doe
+                {currentUser.name}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="light:text-gray-600 text-gray-300">Email:</span>
               <span className="font-medium light:text-gray-900 text-white">
-                johndoe@gmail.com
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="light:text-gray-600 text-gray-300">Phone:</span>
-              <span className="font-medium light:text-gray-900 text-white">
-                0912345678
+                {currentUser.email}
               </span>
             </div>
           </div>

@@ -9,6 +9,9 @@ const Seat = () => {
   const { isDarkMode } = useTheme();
 
   const { state } = useLocation();
+
+  console.log("STATE: ", state);
+
   const [seats, setSeats] = useState(1);
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -254,6 +257,9 @@ const Seat = () => {
               totalPrice: selectedSeats.length * state.price,
               image: state.image,
               genre: state.genre,
+              screen: state.screen,
+              theaterName: state.theaterName,
+              location: state.location,
             }}
             className="w-full max-w-sm" // Ensures consistent button width
           >

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import User from "../models/UserModel";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 const UserController = {
   // Register
@@ -39,6 +40,7 @@ const UserController = {
     try {
       const { email, password } = req.body;
 
+      console.log(req.body);
       const user = await User.findOne({ email });
       if (!user) return res.status(404).json({ message: "User not found." });
 
@@ -46,9 +48,24 @@ const UserController = {
       if (!isMatch)
         return res.status(401).json({ message: "Invalid credentials." });
 
+      console.log("USER: ", user);
+
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, {
+        expiresIn: "1d",
+      });
+
       res.status(200).json({
         message: "Login successful.",
-        user: { id: user._id, name: user.name },
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          reviews: user.reviews,
+          bookings: user.bookings,
+          watchlist: user.watchlist,
+          favorites: user.favorites,
+        },
+        token,
       });
     } catch (err) {
       res.status(500).json({ error: (err as Error).message });
@@ -127,6 +144,46 @@ const UserController = {
       res.status(200).json(user.favorites);
     } catch (err) {
       res.status(500).json({ error: (err as Error).message });
+    }
+  },
+
+  // Book ticket movie
+  bookTicket: async (req: any, res: any) => {
+    try {
+      const user = await User.findById(req.params.id);
+
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      const { movieDetails, bookingDetails } = req.body;
+
+      const { date, seats, price, screen, theaterName, location } =
+        bookingDetails;
+
+      if (!date || !seats || !price || !theaterName) {
+        return res.status(400).json({ message: "Missing booking details." });
+      }
+
+      const newBooking = {
+        movieId: movieDetails.id,
+        showtimeId: new mongoose.Types.ObjectId(),
+        theaterName,
+        seats,
+        totalPrice: price,
+        bookingDate: new Date(),
+      };
+
+      user.bookings.push(newBooking);
+      await user.save();
+
+      res.status(200).json({
+        message: "Booking successful",
+        booking: {
+          movieDetails,
+          bookingDetails,
+        },
+      });
+    } catch (error) {
+      res.status(500).json({ error: (error as Error).message });
     }
   },
 

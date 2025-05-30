@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useActionState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-// Assuming your store is correctly imported and provides processPayment
 import { useUserStore } from "../global/mode"; // Or your correct store path
 
 // PayPal global object (if SDK script were loaded in a real scenario)
@@ -12,6 +11,10 @@ declare global {
 }
 
 interface PaymentLocationState {
+  location: any;
+  theaterName: any;
+  screen: any;
+  genre: any;
   id: string; // Movie ID or a unique identifier for the booking item
   title: string;
   seats: string[];
@@ -26,7 +29,7 @@ interface PaymentLocationState {
 }
 
 const Payment: React.FC = () => {
-  const { processPayment } = useUserStore(); // For credit cards (sample)
+  const { processPayment, currentUser } = useUserStore(); // For credit cards (sample)
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as PaymentLocationState | undefined;
@@ -37,11 +40,7 @@ const Payment: React.FC = () => {
   const [expiryDate, setExpiryDate] = useState(""); // To store "MM/YY"
   const [cvv, setCvv] = useState("");
 
-  // useActionState for Credit Card payments (sample)
-  const [ccActionState, ccFormAction, isCreditCardProcessing] = useActionState(
-    processPayment,
-    undefined
-  );
+  const [isCreditCardProcessing, setIsCreditCardProcessing] = useState(false);
 
   // Local loading/error states for other payment methods (sample)
   const [isOtherPaymentProcessing, setIsOtherPaymentProcessing] =
@@ -50,76 +49,75 @@ const Payment: React.FC = () => {
     null
   );
 
-  // Effect for Credit Card success navigation (sample)
-  useEffect(() => {
-    if (
-      ccActionState === null &&
-      !isCreditCardProcessing &&
-      state &&
-      paymentMethod === "credit_card"
-    ) {
-      console.log("Sample Credit Card payment successful, navigating...");
+  const handleCreditCardSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+    if (!state) return;
+
+    setIsCreditCardProcessing(true);
+    setOtherPaymentError(null);
+
+    try {
+      // Prepare booking data
+      const movieDetails = {
+        id: state.id,
+        genre: state.genre,
+        image: state.image,
+        title: state.title,
+      };
+
+      const bookingDetails = {
+        date: {
+          day: state.day,
+          time: state.time,
+        },
+        seats: state.seats,
+        price: state.totalPrice,
+        screen: state.screen,
+        theaterName: state.theaterName,
+        location: state.location,
+      };
+
+      // Process payment (booking)
+      await processPayment(currentUser, movieDetails, bookingDetails);
+
+      await new Promise((resolve) =>
+        setTimeout(resolve, 2000 + Math.random() * 1000)
+      );
+
+      // Navigate to confirmation
       navigate(`/movie/confirmation/${state.id}`, {
         state: {
           ...state,
           price: state.totalPrice.toFixed(2),
-          paymentMethod: "Credit Card",
+          paymentMethod: "Credit/Debit Card",
         },
       });
+    } catch (error: any) {
+      console.error("Error during credit card submission:", error);
+      setOtherPaymentError("Payment failed. Please try again.");
+    } finally {
+      setIsCreditCardProcessing(false);
     }
-  }, [ccActionState, isCreditCardProcessing, navigate, state, paymentMethod]);
-
-  // --- Handlers for different payment methods (Sample implementations) ---
-
-  const handleCreditCardSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!state) return;
-    console.log("Sample Credit Card form submitted.");
-    setOtherPaymentError(null); // Clear other errors
-    const formData = new FormData(event.currentTarget);
-    formData.set("amount", state.totalPrice.toString());
-    formData.set("itemId", state.id); // Example itemId
-    if (formData.get("expiryDate")) {
-      const [month, yearSuffix] = (formData.get("expiryDate") as string).split(
-        "/"
-      );
-      if (month && yearSuffix) {
-        formData.set("expiryMonth", month);
-        formData.set("expiryYear", `20${yearSuffix}`);
-      }
-    }
-    ccFormAction(formData); // Calls the sample processPayment action
   };
 
   const simulatePaymentAndNavigate = async (methodName: string) => {
     if (!state) return;
     setIsOtherPaymentProcessing(true);
     setOtherPaymentError(null);
-    console.log(
-      `Simulating ${methodName} payment for: ₱${state.totalPrice.toFixed(2)}`
-    );
 
     await new Promise((resolve) =>
       setTimeout(resolve, 2000 + Math.random() * 1000)
     ); // Simulate network delay
 
-    // Simulate random success or failure for sample
-    if (Math.random() > 0.15) {
-      // 85% chance of success
-      console.log(`Sample ${methodName} payment successful, navigating...`);
-      navigate(`/movie/confirmation/${state.id}`, {
-        state: {
-          ...state,
-          price: state.totalPrice.toFixed(2),
-          paymentMethod: methodName,
-        },
-      });
-    } else {
-      console.error(`Sample ${methodName} payment failed.`);
-      setOtherPaymentError(
-        `Simulated ${methodName} payment failed. Please try again or choose another method.`
-      );
-    }
+    navigate(`/movie/confirmation/${state.id}`, {
+      state: {
+        ...state,
+        price: state.totalPrice.toFixed(2),
+        paymentMethod: methodName,
+      },
+    });
     setIsOtherPaymentProcessing(false);
   };
 
@@ -333,15 +331,6 @@ const Payment: React.FC = () => {
               onChange={(e) => {
                 setPaymentMethod(e.target.value);
                 setOtherPaymentError(null); // Clear errors when changing method
-                if (
-                  ccActionState &&
-                  typeof ccActionState === "object" &&
-                  "message" in ccActionState
-                ) {
-                  // Clear credit card specific error if user switches away
-                  // (ccActionState is from useActionState, can't directly set it to null here)
-                  // This might need a reset function for useActionState if available, or just ignore.
-                }
               }}
               className="w-full p-3 border border-gray-600 light:border-gray-400 rounded-md bg-gray-700 light:bg-gray-200 text-white light:text-black focus:border-[#FFD700] focus:ring-1 focus:ring-[#FFD700] outline-none"
             >
@@ -373,10 +362,19 @@ const Payment: React.FC = () => {
                   type="text"
                   name="cardNumber"
                   value={cardNumber}
-                  onChange={(e) => setCardNumber(e.target.value)}
+                  onChange={(e) => {
+                    // Format card number with spaces every 4 digits
+                    const value = e.target.value
+                      .replace(/\s/g, "")
+                      .replace(/(\d{4})/g, "$1 ")
+                      .trim();
+                    setCardNumber(value.substring(0, 19));
+                  }}
                   placeholder="0000 0000 0000 0000"
                   className="w-full p-3 border border-gray-600 light:border-gray-400 rounded-md bg-gray-700 light:bg-gray-200 text-white light:text-black focus:border-[#FFD700]"
                   required
+                  pattern="\d{4} \d{4} \d{4} \d{4}"
+                  maxLength={19}
                   disabled={isCreditCardProcessing}
                 />
               </div>
@@ -393,10 +391,20 @@ const Payment: React.FC = () => {
                     type="text"
                     name="expiryDate"
                     value={expiryDate}
-                    onChange={(e) => setExpiryDate(e.target.value)}
+                    onChange={(e) => {
+                      // Format expiry date as MM/YY
+                      let value = e.target.value.replace(/\D/g, "");
+                      if (value.length > 2) {
+                        value =
+                          value.substring(0, 2) + "/" + value.substring(2, 4);
+                      }
+                      setExpiryDate(value.substring(0, 5));
+                    }}
                     placeholder="MM/YY"
                     className="w-full p-3 border border-gray-600 light:border-gray-400 rounded-md bg-gray-700 light:bg-gray-200 text-white light:text-black focus:border-[#FFD700]"
                     required
+                    pattern="\d{2}/\d{2}"
+                    maxLength={5}
                     disabled={isCreditCardProcessing}
                   />
                 </div>
@@ -409,27 +417,24 @@ const Payment: React.FC = () => {
                   </label>
                   <input
                     id="cvv"
-                    type="text"
+                    type="password"
                     name="cvv"
                     value={cvv}
-                    onChange={(e) => setCvv(e.target.value)}
-                    placeholder="123"
+                    onChange={(e) => {
+                      // Only allow numbers and limit length
+                      const value = e.target.value.replace(/\D/g, "");
+                      setCvv(value.substring(0, 4));
+                    }}
+                    placeholder="•••"
                     className="w-full p-3 border border-gray-600 light:border-gray-400 rounded-md bg-gray-700 light:bg-gray-200 text-white light:text-black focus:border-[#FFD700]"
                     required
+                    pattern="\d{3,4}"
                     maxLength={4}
                     disabled={isCreditCardProcessing}
                   />
                 </div>
               </div>
-              {/* Display Credit Card Specific Error Message */}
-              {ccActionState &&
-                typeof ccActionState === "object" &&
-                "message" in ccActionState &&
-                ccActionState.message && (
-                  <div className="mt-2 p-3 bg-red-900 bg-opacity-50 text-red-300 border border-red-700 rounded-md text-sm">
-                    {ccActionState.message}
-                  </div>
-                )}
+
               <button
                 type="submit"
                 disabled={isCreditCardProcessing || !state}
@@ -439,7 +444,12 @@ const Payment: React.FC = () => {
                   <>{processingSpinner} Processing...</>
                 ) : (
                   `Pay ₱${
-                    state ? state.totalPrice.toFixed(2) : "0.00"
+                    state
+                      ? state.totalPrice.toLocaleString("en-PH", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })
+                      : "0.00"
                   } with Card`
                 )}
               </button>

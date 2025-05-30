@@ -280,6 +280,31 @@ export const useUserStore = create(
           tickets: [],
         });
       },
+
+      // Process Payment
+      processPayment: async (
+        currentUser: any,
+        movieDetails: any,
+        bookingDetails: any
+      ) => {
+        try {
+          const response = await axios.post(
+            `http://localhost:5000/api/user/${currentUser.id}/book/ticket`,
+            {
+              movieDetails,
+              bookingDetails,
+            }
+          );
+          console.log("Booking Successful:", response.data);
+          return response.data;
+        } catch (error: any) {
+          console.error(
+            "Booking Failed:",
+            error.response?.data || error.message
+          );
+          throw new Error(error.response?.data?.message || "Booking failed");
+        }
+      },
     }),
     {
       name: "user-storage",

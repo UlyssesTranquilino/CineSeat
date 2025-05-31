@@ -17,11 +17,12 @@ const BookingSchema = new mongoose.Schema({
     ref: "Movie",
     required: true,
   },
-  showtimeId: { type: mongoose.Schema.Types.ObjectId, required: true },
+  showtimeId: { type: String },
   theaterName: { type: String },
   seats: [{ type: String }],
   totalPrice: { type: Number },
   bookingDate: { type: Date, default: Date.now },
+  paymentMethod: { type: String },
 });
 
 const UserSchema = new mongoose.Schema({

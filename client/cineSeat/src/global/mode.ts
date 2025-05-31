@@ -305,6 +305,23 @@ export const useUserStore = create(
           throw new Error(error.response?.data?.message || "Booking failed");
         }
       },
+
+      // Get seats
+      getTakenSeats: async (showtimeId: string) => {
+        try {
+          const response = await axios.get(
+            `http://localhost:5000/api/user/showtime/${showtimeId}/seats`
+          );
+
+          return response.data.takenSeats;
+        } catch (error: any) {
+          console.error(
+            "Failed getting taken seats:",
+            error.response?.data || error.message
+          );
+          throw new Error(error.response?.data?.message || "Booking failed");
+        }
+      },
     }),
     {
       name: "user-storage",

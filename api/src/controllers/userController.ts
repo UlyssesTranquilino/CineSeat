@@ -156,20 +156,35 @@ const UserController = {
 
       const { movieDetails, bookingDetails } = req.body;
 
-      const { date, seats, price, screen, theaterName, location } =
-        bookingDetails;
+      const {
+        date,
+        seats,
+        price,
+        screen,
+        theaterName,
+        location,
+        paymentMethod,
+      } = bookingDetails;
 
       if (!date || !seats || !price || !theaterName) {
         return res.status(400).json({ message: "Missing booking details." });
       }
 
+      const showtimeId = `${movieDetails.id}-${theaterName.replace(
+        /\s+/g,
+        ""
+      )}-${location.replace(/\s+/g, "")}-${screen}-${date.day.month}-${
+        date.day.day
+      }-${date.time.replace(/\s+/g, "")}`;
+
       const newBooking = {
         movieId: movieDetails.id,
-        showtimeId: new mongoose.Types.ObjectId(),
+        showtimeId: showtimeId,
         theaterName,
         seats,
         totalPrice: price,
         bookingDate: new Date(),
+        paymentMethod: paymentMethod,
       };
 
       user.bookings.push(newBooking);
@@ -184,6 +199,31 @@ const UserController = {
       });
     } catch (error) {
       res.status(500).json({ error: (error as Error).message });
+    }
+  },
+
+  // Get seats taken
+  getTakenSeats: async (req: any, res: any) => {
+    const { showtimeId } = req.params;
+
+    try {
+      // Fetch only the bookings field to reduce memory
+      const users = await User.find({}, "bookings");
+
+      let takenSeats: string[] = [];
+
+      users.forEach((user) => {
+        user.bookings.forEach((booking) => {
+          if (booking.showtimeId === showtimeId) {
+            takenSeats.push(...booking.seats);
+          }
+        });
+      });
+
+      return res.status(200).json({ takenSeats });
+    } catch (error) {
+      console.error("Error fetching taken seats:", error);
+      return res.status(500).json({ error: "Failed to fetch taken seats." });
     }
   },
 

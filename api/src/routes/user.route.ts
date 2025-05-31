@@ -18,4 +18,7 @@ router.delete("/:id/favorites", UserController.removeFavorite);
 
 router.delete("/", UserController.deleteAllUsers);
 
+// Get All User's Booking
+router.get("/showtime/:showtimeId/seats", UserController.getTakenSeats);
+
 export default router;

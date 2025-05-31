@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import { useUserStore } from "../global/mode"; // Or your correct store path
+import { useUserStore, useTheme } from "../global/mode"; // Or your correct store path
 
+import { Toaster, toast } from "react-hot-toast";
 // PayPal global object (if SDK script were loaded in a real scenario)
 declare global {
   interface Window {
@@ -29,6 +30,7 @@ interface PaymentLocationState {
 }
 
 const Payment: React.FC = () => {
+  const { isDarkMode } = useTheme();
   const { processPayment, currentUser } = useUserStore(); // For credit cards (sample)
   const navigate = useNavigate();
   const location = useLocation();
@@ -49,6 +51,24 @@ const Payment: React.FC = () => {
     null
   );
 
+  const toastError = () => {
+    toast.error("Payment failed. Please try again.", {
+      style: isDarkMode
+        ? {
+            border: "1px solid #b91c1c",
+            color: "#fff",
+            backgroundColor: "#1f2937",
+          }
+        : {
+            border: "1px solid #ef4444",
+            color: "#000",
+            backgroundColor: "#fef2f2",
+          },
+      iconTheme: isDarkMode
+        ? { primary: "#ef4444", secondary: "#fef2f2" }
+        : { primary: "#dc2626", secondary: "#fef2f2" },
+    });
+  };
   const handleCreditCardSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
@@ -77,6 +97,7 @@ const Payment: React.FC = () => {
         screen: state.screen,
         theaterName: state.theaterName,
         location: state.location,
+        paymentMethod: "Credit/Debit Card",
       };
 
       // Process payment (booking)
@@ -97,6 +118,8 @@ const Payment: React.FC = () => {
     } catch (error: any) {
       console.error("Error during credit card submission:", error);
       setOtherPaymentError("Payment failed. Please try again.");
+
+      toastError();
     } finally {
       setIsCreditCardProcessing(false);
     }
@@ -111,18 +134,56 @@ const Payment: React.FC = () => {
       setTimeout(resolve, 2000 + Math.random() * 1000)
     ); // Simulate network delay
 
-    navigate(`/movie/confirmation/${state.id}`, {
-      state: {
-        ...state,
-        price: state.totalPrice.toFixed(2),
+    try {
+      // Prepare booking data
+      const movieDetails = {
+        id: state.id,
+        genre: state.genre,
+        image: state.image,
+        title: state.title,
+      };
+
+      const bookingDetails = {
+        date: {
+          day: state.day,
+          time: state.time,
+        },
+        seats: state.seats,
+        price: state.totalPrice,
+        screen: state.screen,
+        theaterName: state.theaterName,
+        location: state.location,
         paymentMethod: methodName,
-      },
-    });
-    setIsOtherPaymentProcessing(false);
+      };
+
+      // Process payment (booking)
+      await processPayment(currentUser, movieDetails, bookingDetails);
+
+      await new Promise((resolve) =>
+        setTimeout(resolve, 2000 + Math.random() * 1000)
+      );
+
+      // Navigate to confirmation
+      navigate(`/movie/confirmation/${state.id}`, {
+        state: {
+          ...state,
+          price: state.totalPrice.toFixed(2),
+          paymentMethod: methodName,
+        },
+      });
+    } catch (error) {
+      console.error("Error during credit card submission:", error);
+      setOtherPaymentError("Payment failed. Please try again.");
+
+      toastError();
+    } finally {
+      setIsOtherPaymentProcessing(false);
+    }
   };
 
   const handleGCashPayment = () => simulatePaymentAndNavigate("GCash");
   const handlePayMayaPayment = () => simulatePaymentAndNavigate("PayMaya");
+  const handlePaypalPayment = () => simulatePaymentAndNavigate("Paypal");
 
   // --- PayPal Integration (Sample: Renders a placeholder button if SDK isn't really loaded) ---
   useEffect(() => {
@@ -310,8 +371,22 @@ const Payment: React.FC = () => {
     </svg>
   );
 
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let val = e.target.value;
+
+    // Remove everything that is NOT a digit
+    val = val.replace(/\D/g, "");
+
+    // Limit to 11 digits
+    if (val.length > 11) val = val.slice(0, 11);
+
+    // Update the input value programmatically
+    e.target.value = val;
+  };
+
   return (
     <div className="px-4 sm:px-8 mt-5 text-left text-white light:text-black">
+      <Toaster position="top-center" reverseOrder={false} />
       <PageHeader />
       <div className="gap-6 md:flex flex-row-reverse items-start justify-between">
         <TicketSummary />
@@ -458,7 +533,7 @@ const Payment: React.FC = () => {
 
           {["gcash", "paymaya", "paypal"].includes(paymentMethod) && (
             <div className="mt-6 space-y-4">
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm light:text-gray-500 text-gray-400">
                 {paymentMethod === "gcash" &&
                   "You will be redirected to GCash (sample flow)."}
 
@@ -469,25 +544,25 @@ const Payment: React.FC = () => {
                   "Use the PayPal button below to complete your payment (sample)."}
               </p>
 
-              {/* Sample phone number input for GCash / PayMaya */}
-              {(paymentMethod === "gcash" || paymentMethod === "paymaya") && (
-                <div>
-                  <label
-                    htmlFor="phone-number"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                  >
-                    Phone Number
-                  </label>
-                  <input
-                    id="phone-number"
-                    type="tel"
-                    placeholder="09xxxxxxxxx"
-                    className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 
-                     bg-white dark:bg-gray-800 text-gray-900 dark:text-white 
-                     focus:outline-none focus:ring-2focus:border-[#FFD700] focus:ring-1 focus:ring-[#FFD700] outline-none"
-                  />
-                </div>
-              )}
+              <div>
+                <label
+                  htmlFor="phone-number"
+                  className="block text-sm font-medium light:text-gray-700 text-gray-300 mb-1"
+                >
+                  Phone Number
+                </label>
+                <input
+                  id="phone-number"
+                  type="tel"
+                  placeholder="09xxxxxxxxx"
+                  maxLength={11}
+                  inputMode="numeric"
+                  onChange={handlePhoneChange}
+                  className="w-full px-4 py-2 rounded-md border light:border-gray-300 border-gray-600 
+             light:bg-white bg-gray-800 light:text-gray-900 text-white 
+             focus:outline-none focus:ring-2 focus:border-[#FFD700]  focus:ring-[#FFD700] outline-none"
+                />
+              </div>
 
               {paymentMethod === "gcash" && (
                 <button
@@ -522,13 +597,19 @@ const Payment: React.FC = () => {
               )}
 
               {paymentMethod === "paypal" && (
-                <div id="paypal-button-container" className="mt-2">
-                  {isOtherPaymentProcessing && (
-                    <p className="text-center text-sm text-gray-400">
-                      Processing PayPal...
-                    </p>
+                <button
+                  onClick={handlePaypalPayment}
+                  disabled={isOtherPaymentProcessing || !state}
+                  className={`${paymentButtonClasses} bg-blue-600 hover:bg-blue-700 text-white`}
+                >
+                  {isOtherPaymentProcessing ? (
+                    <>{processingSpinner} Processing...</>
+                  ) : (
+                    `Proceed with Paypal (₱${
+                      state?.totalPrice.toFixed(2) ?? "0.00"
+                    })`
                   )}
-                </div>
+                </button>
               )}
             </div>
           )}

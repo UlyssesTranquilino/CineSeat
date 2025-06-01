@@ -178,8 +178,9 @@ const UserController = {
       }-${date.time.replace(/\s+/g, "")}`;
 
       const newBooking = {
-        movieId: movieDetails.id,
+        movieDetails: movieDetails,
         showtimeId: showtimeId,
+        location,
         theaterName,
         seats,
         totalPrice: price,
@@ -196,6 +197,7 @@ const UserController = {
           movieDetails,
           bookingDetails,
         },
+        user,
       });
     } catch (error) {
       res.status(500).json({ error: (error as Error).message });

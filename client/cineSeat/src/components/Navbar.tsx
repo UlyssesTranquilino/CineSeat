@@ -10,10 +10,49 @@ import MenuIcon from "@mui/icons-material/Menu";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { Drawer, IconButton } from "@mui/material";
+import LocalActivityOutlinedIcon from "@mui/icons-material/LocalActivityOutlined";
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 
 import { useMovieStore, useUserStore } from "../global/mode";
 
+// Tickets and Payment History
+// Favorites
+// Watchlist
+// Profile
+
 const drawerWidth = 240;
+
+const tabs = [
+  {
+    label: "Home",
+    route: "/",
+    icon: <HomeOutlinedIcon />, // Optional
+  },
+  {
+    label: "Tickets",
+    route: "/tickets",
+    icon: <LocalActivityOutlinedIcon />, // Optional
+  },
+  {
+    label: "Favorites",
+    route: "/favorites",
+    icon: <FavoriteBorderOutlinedIcon />,
+  },
+  {
+    label: "Watchlist",
+    route: "/watchlist",
+    icon: <VisibilityOutlinedIcon />,
+  },
+  {
+    label: "Profile",
+    route: "/profile",
+    icon: <AccountCircleOutlinedIcon />,
+  },
+];
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -26,7 +65,10 @@ const Navbar = () => {
 
   //Drawer
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [desktopBarOpen, setDesktopBarOpen] = useState(false);
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
+
+  const handleDesktopDrawerToggle = () => setDesktopBarOpen(!desktopBarOpen);
 
   const { movies } = useMovieStore();
 
@@ -128,7 +170,7 @@ const Navbar = () => {
       )}
 
       {/* Desktop Navigation */}
-      <div className="hidden sm:flex items-center gap-5 w-full justify-end ">
+      <div className="hidden sm:flex items-center gap-3 w-full justify-end ">
         {!isAuthRoute && (
           <div className="sm:flex items-center gap-5 w-full justify-end ">
             <div className=" w-full   max-w-110 sm:max-w-70 md:max-w-100 lg:max-w-125 relative">
@@ -198,7 +240,7 @@ const Navbar = () => {
           </div>
         )}
 
-        <div onClick={toggleTheme} className="cursor-pointer">
+        <div onClick={toggleTheme} className="cursor-pointer ml-3">
           {isDarkMode ? (
             <LightModeOutlinedIcon className="pages  hover:text-yellow-500  light:hover:text-[#3c73ff] transition-colors duration-200" />
           ) : (
@@ -206,11 +248,80 @@ const Navbar = () => {
           )}
         </div>
 
-        {currentUser && (
-          <button onClick={handleSignOut}>
-            <h1 className="border-[#FD1513] hover:border-b-1">Sign out</h1>
-          </button>
-        )}
+        <Link to="/profile" className="cursor-pointer hover:text-red-500/90">
+          <AccountCircleOutlinedIcon />
+        </Link>
+
+        <IconButton onClick={handleDesktopDrawerToggle}>
+          <MenuIcon className="text-white light:text-black" />
+        </IconButton>
+
+        <Drawer
+          anchor="right"
+          open={desktopBarOpen}
+          onClose={handleDesktopDrawerToggle}
+          sx={{
+            "& .MuiDrawer-paper": {
+              width: drawerWidth,
+              backgroundColor: isDarkMode ? "rgba(4, 10, 25, 0.9)" : "white",
+            },
+          }}
+        >
+          <div className=" items-center gap-5 flex flex-col pt-10 text-white light:text-black">
+            {!currentUser && (
+              <div className="flex flex-col items-start w-full px-5 text-center">
+                <Link
+                  to="/login"
+                  onClick={handleDesktopDrawerToggle}
+                  className="flex-justify-start gap-3 cursor-pointer w-full p-2 px-5 hover:bg-red-800/20  light:hover:bg-red-300/20 rounded-sm"
+                >
+                  <h1>Log in</h1>
+                </Link>{" "}
+                <Link
+                  to="/signup"
+                  onClick={handleDesktopDrawerToggle}
+                  className="flex-justify-start gap-3 cursor-pointer w-full p-2 px-5 hover:bg-red-800/20  light:hover:bg-red-300/20 rounded-sm"
+                >
+                  <h1>Sign up</h1>
+                </Link>
+              </div>
+            )}
+
+            {!isAuthRoute && (
+              <div className="flex flex-col  gap-3 w-full px-3 ">
+                {tabs.map((tab) => (
+                  <Link
+                    to={tab.route}
+                    key={tab.route}
+                    onClick={handleDesktopDrawerToggle}
+                    className={`flex justify-start gap-3 w-full p-2 px-5 rounded-sm transition-colors duration-150
+                ${
+                  location.pathname === tab.route
+                    ? "text-red-500 light:text-red-600 bg-red-800/10 light:bg-red-300/10"
+                    : "text-white light:text-black hover:bg-red-800/20 light:hover:bg-red-300/20"
+                }`}
+                  >
+                    {tab.icon}
+                    <span>{tab.label}</span>
+                  </Link>
+                ))}
+
+                {currentUser && (
+                  <button
+                    onClick={() => {
+                      handleSignOut();
+                      handleDesktopDrawerToggle();
+                    }}
+                    className="cursor-pointer mt-20 w-full px-5 p-2 flex items-start  hover:bg-red-800/20  light:hover:bg-red-300/20 rounded-sm"
+                  >
+                    <LogoutOutlinedIcon />
+                    <h1 className="border-[#FD1513] px-3">Sign out</h1>
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        </Drawer>
       </div>
 
       {/* Mobile Navigation */}
@@ -227,35 +338,77 @@ const Navbar = () => {
         sx={{
           "& .MuiDrawer-paper": {
             width: drawerWidth,
-            backgroundColor: isDarkMode ? "rgba(4, 10, 25, 0.8)" : "white",
+            backgroundColor: isDarkMode ? "rgba(4, 10, 25, 0.9)" : "white",
           },
         }}
       >
-        <div className=" items-center gap-5  flex flex-col pt-10 text-white light:text-black">
+        <div className=" items-center gap-5 flex flex-col pt-10 text-white light:text-black">
           {!currentUser && (
-            <>
-              <Link to="/signup">
-                <h1 className="border-[#FD1513] hover:border-b-1">Sign up</h1>
+            <div className="flex flex-col items-start w-full px-5 text-center">
+              <Link
+                to="/login"
+                onClick={handleDrawerToggle}
+                className="flex-justify-start gap-3 cursor-pointer w-full p-2 px-5 hover:bg-red-800/20  light:hover:bg-red-300/20 rounded-sm"
+              >
+                <h1>Log in</h1>
+              </Link>{" "}
+              <Link
+                to="/signup"
+                onClick={handleDrawerToggle}
+                className="flex-justify-start gap-3 cursor-pointer w-full p-2 px-5 hover:bg-red-800/20  light:hover:bg-red-300/20 rounded-sm"
+              >
+                <h1>Sign up</h1>
               </Link>
-              <Link to="login">
-                <h1 className="border-[#FD1513] hover:border-b-1">Log in</h1>
-              </Link>
-            </>
+            </div>
           )}
 
-          {/* Theme Toggle in Drawer */}
-          <div onClick={toggleTheme} className="cursor-pointer">
-            {isDarkMode ? (
-              <LightModeOutlinedIcon className="text-white pages hover:text-yellow-500   transition-colors duration-200" />
-            ) : (
-              <DarkModeOutlinedIcon className="pages light:text-black light:hover:text-blue-800 transition-colors duration-200" />
-            )}
-          </div>
+          {!isAuthRoute && (
+            <div className="flex flex-col  gap-3 w-full px-3 ">
+              {tabs.map((tab) => (
+                <Link
+                  to={tab.route}
+                  key={tab.route}
+                  onClick={handleDrawerToggle}
+                  className={`flex justify-start gap-3 w-full p-2 px-5 rounded-sm transition-colors duration-150
+                ${
+                  location.pathname === tab.route
+                    ? "text-red-500 light:text-red-600 bg-red-800/10 light:bg-red-300/10"
+                    : "text-white light:text-black hover:bg-red-800/20 light:hover:bg-red-300/20"
+                }`}
+                >
+                  {tab.icon}
+                  <span>{tab.label}</span>
+                </Link>
+              ))}
 
-          {currentUser && (
-            <button onClick={handleSignOut}>
-              <h1 className="border-[#FD1513] hover:border-b-1">Sign out</h1>
-            </button>
+              {/* Theme Toggle in Drawer */}
+              <div
+                onClick={() => {
+                  toggleTheme();
+                }}
+                className="flex-justify-start gap-3 cursor-pointer w-full p-2 px-5 hover:bg-red-800/20  light:hover:bg-red-300/20 rounded-sm"
+              >
+                {isDarkMode ? (
+                  <LightModeOutlinedIcon />
+                ) : (
+                  <DarkModeOutlinedIcon />
+                )}
+                <span className="pl-3">Theme</span>
+              </div>
+
+              {currentUser && (
+                <button
+                  onClick={() => {
+                    handleSignOut();
+                    handleDrawerToggle();
+                  }}
+                  className="cursor-pointer mt-20 w-full px-5 p-2 flex items-start  hover:bg-red-800/20  light:hover:bg-red-300/20 rounded-sm"
+                >
+                  <LogoutOutlinedIcon />
+                  <h1 className="border-[#FD1513] px-3">Sign out</h1>
+                </button>
+              )}
+            </div>
           )}
         </div>
       </Drawer>

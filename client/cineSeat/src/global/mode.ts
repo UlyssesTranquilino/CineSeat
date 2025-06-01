@@ -296,6 +296,13 @@ export const useUserStore = create(
             }
           );
           console.log("Booking Successful:", response.data);
+
+          const updatedUser = response.data.user;
+
+          if (updatedUser) {
+            set({ currentUser: updatedUser });
+          }
+
           return response.data;
         } catch (error: any) {
           console.error(

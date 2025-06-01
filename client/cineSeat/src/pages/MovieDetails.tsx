@@ -7,7 +7,7 @@ import SimilarMovies from "../components/SimilarMovies";
 
 //MUI
 import Skeleton from "@mui/material/Skeleton";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 import { useUserStore } from "../global/mode";
 
@@ -99,7 +99,7 @@ const MovieDetails = () => {
             onClick={handleBackClick}
             className="flex items-start light:text-gray-400 text-gray-500 cursor-pointer py-2 px-2 mb-2 light:hover:bg-gray-100 light:hover:text-gray-500  hover:bg-gray-900 hover:text-gray-200 w-20 rounded-sm transition-all duration-200 ease-in-out "
           >
-            <ArrowBackIcon />
+            <ArrowBackIosIcon className="scale-80" />
             Back
           </div>
           <div className="rounded-md overflow-hidden relative text-left  h-55 sm:h-80 md:h-90 lg:h-100 mt-3">

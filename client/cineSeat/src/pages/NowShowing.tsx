@@ -106,12 +106,12 @@ const NowShowing = () => {
                 />
               </div>
 
-              <div className="bg-black flex flex-col justify-between py-4 px-2 h-20 absolute bottom-0 w-full">
-                <h1 className="text-left font-semibold text-white truncate w-full overflow-hidden whitespace-nowrap">
+              <div className="bg-black light:bg-gray-200  flex flex-col justify-between py-4 px-2 h-20 absolute bottom-0 w-full">
+                <h1 className="text-left font-semibold text-white light:text-black truncate w-full overflow-hidden whitespace-nowrap">
                   {movie.title}
                 </h1>
 
-                <div className="flex items-center justify-between text-gray-400 gap-2">
+                <div className="flex items-center justify-between text-gray-400 light:text-gray-700 gap-2">
                   <div className="flex items-center truncate overflow-hidden whitespace-nowrap">
                     {movie.genre.map((genre: string, index: number) => (
                       <p key={genre} className="mr-1 text-sm mt-1">
@@ -129,7 +129,7 @@ const NowShowing = () => {
                       max={1}
                       size="small"
                     />
-                    <p className="text-sm text-yellow-400 mt-[1px]">
+                    <p className="text-sm text-yellow-400 light:text-yellow-500 mt-[1px]">
                       {movie.rating.value}
                     </p>
                   </div>

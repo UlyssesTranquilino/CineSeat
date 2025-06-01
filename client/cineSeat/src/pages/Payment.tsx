@@ -36,6 +36,8 @@ const Payment: React.FC = () => {
   const location = useLocation();
   const state = location.state as PaymentLocationState | undefined;
 
+  console.log("state: ", state);
+
   const [paymentMethod, setPaymentMethod] = useState("credit_card");
   // Controlled inputs for card details
   const [cardNumber, setCardNumber] = useState("");
@@ -283,7 +285,7 @@ const Payment: React.FC = () => {
     <div className="flex gap-3 items-center mb-6">
       <div
         onClick={() => navigate(-1)}
-        className="cursor-pointer p-2 -ml-2 rounded-full hover:bg-gray-700 light:hover:bg-gray-300 transition-colors"
+        className="cursor-pointer p-2 -ml-2 rounded-fulltransition-colors"
       >
         <ArrowBackIosIcon className=" text-white light:text-black" />{" "}
         {/* Adjusted icon alignment */}
@@ -301,12 +303,12 @@ const Payment: React.FC = () => {
   );
 
   const TicketSummary = () => (
-    <div className="flex-[2] lg:flex-[1.5] xl:flex-[1] md:sticky md:top-6 bg-gray-800 light:bg-gray-100 p-4 sm:p-6 rounded-lg shadow-xl mb-6 md:mb-0">
+    <div className="flex-[2] lg:flex-[1.5] xl:flex-[1] md:sticky md:top-6 bg-gray-900 light:bg-gray-100 p-4 sm:p-6 rounded-lg shadow-xl mb-6 md:mb-0">
       <h2 className="text-xl font-bold mb-4 text-white light:text-black">
         Ticket Summary
       </h2>
       <img
-        className="w-full rounded-md mb-4 max-w-xs mx-auto"
+        className="w-full rounded-md mb-4 max-w-xs mx-auto mt-3"
         src={state.image}
         alt={state.title}
         onError={(e) => {

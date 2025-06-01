@@ -15,7 +15,7 @@ import MovieDetails from "./pages/MovieDetails";
 import Seat from "./pages/Seat";
 import Payment from "./pages/Payment";
 import Confirmation from "./pages/Confirmation";
-import Sample from "./Sample";
+import ProfileTickets from "./pages/Tickets/ProfileTickets";
 
 import { useTheme } from "./global/mode";
 
@@ -60,6 +60,7 @@ function App() {
           <Route path="/movie/seat/:id" element={<Seat />} />
           <Route path="/movie/payment/:id" element={<Payment />} />
           <Route path="/movie/confirmation/:id" element={<Confirmation />} />
+          <Route path="/tickets" element={<ProfileTickets />} />
           Add 404
         </Routes>
       </div>

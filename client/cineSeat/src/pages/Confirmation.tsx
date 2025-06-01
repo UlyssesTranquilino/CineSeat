@@ -7,8 +7,6 @@ const Confirmation = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
 
-  console.log("state: ", state, " Current user: ", currentUser);
-
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
       {/* Confirmation Header */}

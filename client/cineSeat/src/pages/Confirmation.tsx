@@ -118,7 +118,7 @@ const Confirmation = () => {
         >
           Back to Home
         </button>
-        <p className="mt-4 light:text-gray-600 text-gray-400">
+        {/* <p className="mt-4 light:text-gray-600 text-gray-400">
           Need help?{" "}
           <a
             href="#"
@@ -126,7 +126,7 @@ const Confirmation = () => {
           >
             Contact support
           </a>
-        </p>
+        </p> */}
       </div>
     </div>
   );

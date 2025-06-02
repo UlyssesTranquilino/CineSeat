@@ -9,10 +9,21 @@ import SimilarMovies from "../components/SimilarMovies";
 import Skeleton from "@mui/material/Skeleton";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
-import { useUserStore } from "../global/mode";
+import Tooltip from "@mui/material/Tooltip";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
+import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
+import { IconButton } from "@mui/material";
+
+import { useUserStore, useTheme } from "../global/mode";
+
+import { Toaster, toast } from "react-hot-toast";
 
 const MovieDetails = () => {
-  const { currentUser } = useUserStore();
+  const { currentUser, addToFavorites } = useUserStore();
+  const { isDarkMode } = useTheme();
+
   const navigate = useNavigate();
   const handleBackClick = () => {
     navigate(-1);
@@ -22,11 +33,17 @@ const MovieDetails = () => {
   const [movie, setMovie] = useState<any>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
+  console.log("CURRENT USER: ", currentUser);
+  const [isFavorite, setIsFavorite] = useState(
+    currentUser.favorites.some((fav: any) => fav._id === id)
+  );
+
   const fetchMovieDetails = async (id: string) => {
     const res = await fetch(`http://localhost:5000/api/movies/${id}`);
 
     const { data, success } = await res.json();
     setIsSuccess(success);
+    console.log(data);
     setMovie(data);
   };
 
@@ -39,6 +56,8 @@ const MovieDetails = () => {
       });
       fetchMovieDetails(id);
     }
+
+    setIsFavorite(currentUser.favorites.some((fav: any) => fav._id === id));
   }, [id]);
 
   interface Review {
@@ -91,8 +110,74 @@ const MovieDetails = () => {
       navigate("/login");
     } else navigate(`/movie/ticket/${movie._id}`);
   };
+
+  const [isInWatchlist, setIsInWatchlist] = useState(
+    currentUser.watchlist.includes(id)
+  );
+
+  const handleToggleWatchlist = () => {
+    setIsInWatchlist(!isInWatchlist);
+  };
+
+  const handleToggleFavorite = async () => {
+    try {
+      let res;
+      console.log("CURRENT USER: ", currentUser);
+      if (!isFavorite) {
+        res = await addToFavorites(currentUser, movie);
+        toastNotif("Added to Favorites!", false);
+      } else res = "remove";
+
+      setIsFavorite(!isFavorite);
+
+      console.log("RES: ", res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const toastNotif = (message: string, isError: boolean) => {
+    if (!isError) {
+      toast.success(message, {
+        style: isDarkMode
+          ? {
+              border: "1px solid #b91c1c",
+              color: "#fff",
+              backgroundColor: "#1f2937",
+            }
+          : {
+              border: "1px solid #ef4444",
+              color: "#000",
+              backgroundColor: "#fef2f2",
+            },
+        iconTheme: isDarkMode
+          ? { primary: "#ef4444", secondary: "#fef2f2" }
+          : { primary: "#dc2626", secondary: "#fef2f2" },
+      });
+    } else {
+      toast.error(message, {
+        style: isDarkMode
+          ? {
+              border: "1px solid #b91c1c",
+              color: "#fff",
+              backgroundColor: "#1f2937",
+            }
+          : {
+              border: "1px solid #ef4444",
+              color: "#000",
+              backgroundColor: "#fef2f2",
+            },
+        iconTheme: isDarkMode
+          ? { primary: "#ef4444", secondary: "#fef2f2" }
+          : { primary: "#dc2626", secondary: "#fef2f2" },
+      });
+    }
+  };
+
   return (
     <div>
+      <Toaster position="top-center" reverseOrder={false} />
+
       {isSuccess ? (
         <div className="light:text-black">
           <div
@@ -163,9 +248,48 @@ const MovieDetails = () => {
                 })}
               </h2>
 
+              <div className="flex mt-4">
+                <Tooltip
+                  title={
+                    isInWatchlist ? "Remove from Watchlist" : "Add to Watchlist"
+                  }
+                  placement="top"
+                >
+                  <IconButton
+                    onClick={handleToggleWatchlist}
+                    color={isInWatchlist ? "primary" : "default"}
+                  >
+                    {isInWatchlist ? (
+                      <PlaylistAddCheckIcon />
+                    ) : (
+                      <PlaylistAddIcon className="text-white" />
+                    )}
+                  </IconButton>
+                </Tooltip>
+
+                {/* Favorite Button */}
+                <Tooltip
+                  title={
+                    isFavorite ? "Remove from Favorites" : "Add to Favorites"
+                  }
+                  placement="top"
+                >
+                  <IconButton
+                    onClick={handleToggleFavorite}
+                    color={isFavorite ? "error" : "default"}
+                  >
+                    {isFavorite ? (
+                      <FavoriteIcon />
+                    ) : (
+                      <FavoriteBorderIcon className="text-white" />
+                    )}
+                  </IconButton>
+                </Tooltip>
+              </div>
+
               <button
                 onClick={() => handleBookTicket()}
-                className="bg-[#FFD700] rounded-sm mt-4 w-24 sm:w-30 lg:w-40 text-xs sm:text-[14px] sm:mt-7 text-black cursor-pointer font-semibold p-1 md:text-md lg:text-lg hover:shadow-lg shadow-yellow-500/50 transition-all duration-300 ease-in-out"
+                className="bg-[#FFD700] rounded-sm mt-1 lg:mt-2 w-24 sm:w-30 lg:w-40 text-xs sm:text-[14px]  text-black cursor-pointer font-semibold p-1 lg:py-2 md:text-md lg:text-[16px]  hover:shadow-lg shadow-yellow-500/50 transition-all duration-300 ease-in-out"
               >
                 Book Tickets
               </button>
@@ -220,7 +344,7 @@ const MovieDetails = () => {
                   {movie.cast.slice(0, 10).map((cast: any) => (
                     <div
                       key={cast.id}
-                      className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-all duration-300 transform hover:scale-105"
+                      className="flex flex-col items-center gap-2 w-20 transition-all duration-300 transform " //hover:scale-105
                     >
                       <div className="rounded-full overflow-hidden w-18 h-18 flex items-center justify-center">
                         <img
@@ -250,7 +374,7 @@ const MovieDetails = () => {
                   {movie.crew.slice(0, 6).map((cast: any) => (
                     <div
                       key={cast.id}
-                      className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-all duration-300 transform hover:scale-105"
+                      className="flex flex-col items-center gap-2 w-20  transition-all duration-300 transform" //hover:scale-105
                     >
                       <div className="rounded-full overflow-hidden w-18 h-18 flex items-center justify-center">
                         <img src={cast.profilePath} alt={cast.name} />

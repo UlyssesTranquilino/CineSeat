@@ -22,12 +22,27 @@ const BookingSchema = new mongoose.Schema({
   location: { type: String },
 });
 
+const FavoriteMovieSchema = new mongoose.Schema({
+  movieId: { type: String },
+  duration: { type: Number },
+  genre: [{ type: String }],
+  language: { type: String },
+  posterUrl: { type: String },
+  rating: {
+    value: { type: Number },
+    source: { type: String },
+    reviewsCount: { type: Number },
+  },
+  releaseDate: { type: String },
+  title: { type: String },
+});
+
 const UserSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, unique: true, required: true },
   password: { type: String, required: true },
 
-  favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Movie" }],
+  favorites: [FavoriteMovieSchema],
   watchlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Movie" }],
   reviews: [ReviewSchema],
   bookings: [BookingSchema],

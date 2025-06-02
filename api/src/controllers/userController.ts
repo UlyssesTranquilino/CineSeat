@@ -57,7 +57,7 @@ const UserController = {
       res.status(200).json({
         message: "Login successful.",
         user: {
-          id: user._id,
+          _id: user._id,
           name: user.name,
           email: user.email,
           reviews: user.reviews,
@@ -114,17 +114,29 @@ const UserController = {
   // Add favorite movie
   addFavorite: async (req: any, res: any) => {
     try {
-      const { movieId } = req.body;
+      const { movieData } = req.body;
       const user = await User.findById(req.params.id);
 
       if (!user) return res.status(404).json({ message: "User not found." });
 
-      if (!user.favorites.includes(movieId)) {
-        user.favorites.push(movieId);
+      console.log(movieData);
+
+      const movieAlreadyInFavorites = user.favorites.some(
+        (favMovie) => favMovie._id === movieData._id
+      );
+
+      if (!movieAlreadyInFavorites) {
+        user.favorites.push(movieData);
         await user.save();
+      } else {
+        console.log("already in");
       }
 
-      res.status(200).json(user.favorites);
+      res.status(200).json({
+        message: "Added to Favorites!",
+        favorites: user.favorites,
+        user,
+      });
     } catch (err) {
       res.status(500).json({ error: (err as Error).message });
     }
@@ -138,7 +150,7 @@ const UserController = {
 
       if (!user) return res.status(404).json({ message: "User not found." });
 
-      user.favorites = user.favorites.filter((id) => id.toString() !== movieId);
+      user.favorites.pull({ _id: movieId });
       await user.save();
 
       res.status(200).json(user.favorites);
@@ -151,6 +163,8 @@ const UserController = {
   bookTicket: async (req: any, res: any) => {
     try {
       const user = await User.findById(req.params.id);
+
+      console.log("USER: ", req.params.id);
 
       if (!user) return res.status(404).json({ message: "User not found" });
 

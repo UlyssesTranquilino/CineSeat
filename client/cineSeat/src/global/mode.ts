@@ -289,27 +289,36 @@ export const useUserStore = create(
       ) => {
         try {
           const response = await axios.post(
-            `http://localhost:5000/api/user/${currentUser.id}/book/ticket`,
+            `http://localhost:5000/api/user/${currentUser._id}/book/ticket`,
             {
               movieDetails,
               bookingDetails,
             }
           );
-          console.log("Booking Successful:", response.data);
+
+          console.log("✅ Booking Successful:", response.data);
 
           const updatedUser = response.data.user;
 
+          // Update user in store if available
           if (updatedUser) {
             set({ currentUser: updatedUser });
           }
 
           return response.data;
         } catch (error: any) {
-          console.error(
-            "Booking Failed:",
-            error.response?.data || error.message
-          );
-          throw new Error(error.response?.data?.message || "Booking failed");
+          // Axios error formatting
+          const message =
+            error?.response?.data?.message ||
+            error?.message ||
+            "Booking failed. Please try again.";
+
+          console.error("❌ Booking Failed:", message);
+          console.log("Raw error object:", error);
+
+          // Optional: Notify user via toast/snackbar here
+
+          throw new Error(message);
         }
       },
 
@@ -327,6 +336,55 @@ export const useUserStore = create(
             error.response?.data || error.message
           );
           throw new Error(error.response?.data?.message || "Booking failed");
+        }
+      },
+
+      // Add User Favorite
+      addToFavorites: async (currentUser: any, movieData: any) => {
+        try {
+          const {
+            _id,
+            duration,
+            genre,
+            language,
+            posterUrl,
+            rating,
+            releaseDate,
+            title,
+          } = movieData;
+
+          const response = await axios.post(
+            `http://localhost:5000/api/user/${currentUser._id}/favorites`,
+            {
+              movieData: {
+                _id,
+                duration,
+                genre,
+                language,
+                posterUrl,
+                rating,
+                releaseDate,
+                title,
+              },
+            }
+          );
+
+          const updatedUser = response.data.user;
+
+          // Update user in store if available
+          if (updatedUser) {
+            set({ currentUser: updatedUser });
+          }
+
+          return response.data;
+        } catch (error: any) {
+          // Axios error formatting
+          const message =
+            error?.response?.data?.message ||
+            error?.message ||
+            "Adding to Favorites failed. Please try again.";
+
+          throw new Error(message);
         }
       },
     }),

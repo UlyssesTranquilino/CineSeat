@@ -98,7 +98,7 @@ const BookTickets = () => {
       {isSuccess ? (
         <div className="px-5 mt-10">
           <div className="flex items-center gap-3">
-            <div onClick={() => navigate(-1)} className="cursor-pointer">
+            <div onClick={() => navigate(-1)} className="cursor-pointer pl-1">
               <ArrowBackIosIcon className="mb-1 text-white light:text-black" />
             </div>
             <div>

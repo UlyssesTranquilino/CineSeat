@@ -387,6 +387,110 @@ export const useUserStore = create(
           throw new Error(message);
         }
       },
+
+      // Remove to User Favorites
+      removeToFavorites: async (currentUser: any, movieId: any) => {
+        try {
+          console.log("CURRENT USER: ", currentUser);
+          const response = await axios.delete(
+            `http://localhost:5000/api/user/${currentUser._id}/favorites`,
+            {
+              data: { movieId },
+            }
+          );
+
+          const updatedUser = response.data.user;
+
+          if (updatedUser) {
+            set({ currentUser: updatedUser });
+          }
+
+          return response.data;
+        } catch (error: any) {
+          const message =
+            error?.response?.data?.message ||
+            error?.message ||
+            "Adding to Favorites failed. Please try again.";
+
+          throw new Error(message);
+        }
+      },
+
+      // Add User Watchlists
+      addToWatchlists: async (currentUser: any, movieData: any) => {
+        try {
+          const {
+            _id,
+            duration,
+            genre,
+            language,
+            posterUrl,
+            rating,
+            releaseDate,
+            title,
+          } = movieData;
+
+          const response = await axios.post(
+            `http://localhost:5000/api/user/${currentUser._id}/watchlists`,
+            {
+              movieData: {
+                _id,
+                duration,
+                genre,
+                language,
+                posterUrl,
+                rating,
+                releaseDate,
+                title,
+              },
+            }
+          );
+
+          const updatedUser = response.data.user;
+
+          // Update user in store if available
+          if (updatedUser) {
+            set({ currentUser: updatedUser });
+          }
+
+          return response.data;
+        } catch (error: any) {
+          // Axios error formatting
+          const message =
+            error?.response?.data?.message ||
+            error?.message ||
+            "Adding to Favorites failed. Please try again.";
+
+          throw new Error(message);
+        }
+      },
+
+      // Remove to User Watchlists
+      removeToWatchlists: async (currentUser: any, movieId: any) => {
+        try {
+          const response = await axios.delete(
+            `http://localhost:5000/api/user/${currentUser._id}/watchlists`,
+            {
+              data: { movieId },
+            }
+          );
+
+          const updatedUser = response.data.user;
+
+          if (updatedUser) {
+            set({ currentUser: updatedUser });
+          }
+
+          return response.data;
+        } catch (error: any) {
+          const message =
+            error?.response?.data?.message ||
+            error?.message ||
+            "Adding to Favorites failed. Please try again.";
+
+          throw new Error(message);
+        }
+      },
     }),
     {
       name: "user-storage",

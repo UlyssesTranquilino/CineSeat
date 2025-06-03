@@ -106,7 +106,7 @@ const NowShowing = () => {
                 />
               </div>
 
-              <div className="bg-black light:bg-gray-200  flex flex-col justify-between py-4 px-2 h-20 absolute bottom-0 w-full">
+              <div className="bg-black light:bg-gray-100  flex flex-col justify-between py-4 px-2 h-20 absolute bottom-0 w-full">
                 <h1 className="text-left font-semibold text-white light:text-black truncate w-full overflow-hidden whitespace-nowrap">
                   {movie.title}
                 </h1>
@@ -129,7 +129,7 @@ const NowShowing = () => {
                       max={1}
                       size="small"
                     />
-                    <p className="text-sm text-yellow-400 light:text-yellow-500 mt-[1px]">
+                    <p className="text-sm text-yellow-400 light:text-yellow-600 mt-[1px]">
                       {movie.rating.value}
                     </p>
                   </div>

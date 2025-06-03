@@ -21,7 +21,13 @@ import { useUserStore, useTheme } from "../global/mode";
 import { Toaster, toast } from "react-hot-toast";
 
 const MovieDetails = () => {
-  const { currentUser, addToFavorites } = useUserStore();
+  const {
+    currentUser,
+    addToFavorites,
+    removeToFavorites,
+    addToWatchlists,
+    removeToWatchlists,
+  } = useUserStore();
   const { isDarkMode } = useTheme();
 
   const navigate = useNavigate();
@@ -33,10 +39,15 @@ const MovieDetails = () => {
   const [movie, setMovie] = useState<any>(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  console.log("CURRENT USER: ", currentUser);
   const [isFavorite, setIsFavorite] = useState(
     currentUser.favorites.some((fav: any) => fav._id === id)
   );
+
+  const [isInWatchlist, setIsInWatchlist] = useState(
+    currentUser.watchlist.some((movie: any) => movie._id === id)
+  );
+
+  console.log("is Favorites: ", isFavorite);
 
   const fetchMovieDetails = async (id: string) => {
     const res = await fetch(`http://localhost:5000/api/movies/${id}`);
@@ -58,6 +69,9 @@ const MovieDetails = () => {
     }
 
     setIsFavorite(currentUser.favorites.some((fav: any) => fav._id === id));
+    setIsInWatchlist(
+      currentUser.watchlist.some((movie: any) => movie._id === id)
+    );
   }, [id]);
 
   interface Review {
@@ -111,14 +125,6 @@ const MovieDetails = () => {
     } else navigate(`/movie/ticket/${movie._id}`);
   };
 
-  const [isInWatchlist, setIsInWatchlist] = useState(
-    currentUser.watchlist.includes(id)
-  );
-
-  const handleToggleWatchlist = () => {
-    setIsInWatchlist(!isInWatchlist);
-  };
-
   const handleToggleFavorite = async () => {
     try {
       let res;
@@ -126,12 +132,35 @@ const MovieDetails = () => {
       if (!isFavorite) {
         res = await addToFavorites(currentUser, movie);
         toastNotif("Added to Favorites!", false);
-      } else res = "remove";
+      } else {
+        res = await removeToFavorites(currentUser, movie._id);
+        toastNotif("Removed to Favorites!", false);
+      }
 
       setIsFavorite(!isFavorite);
 
       console.log("RES: ", res);
-    } catch (error) {
+    } catch (error: any) {
+      toastNotif(error.message, false);
+      console.log(error);
+    }
+  };
+
+  const handleToggleWatchlist = async () => {
+    try {
+      let res;
+
+      if (!isInWatchlist) {
+        res = await addToWatchlists(currentUser, movie);
+        toastNotif("Added to Watchlists!", false);
+      } else {
+        res = await removeToWatchlists(currentUser, movie._id);
+        toastNotif("Removed to Watchlists!", false);
+      }
+
+      setIsInWatchlist(!isInWatchlist);
+    } catch (error: any) {
+      toastNotif(error.message, false);
       console.log(error);
     }
   };
@@ -182,7 +211,7 @@ const MovieDetails = () => {
         <div className="light:text-black">
           <div
             onClick={handleBackClick}
-            className="flex items-start light:text-gray-400 text-gray-500 cursor-pointer py-2 px-2 mb-2 light:hover:bg-gray-100 light:hover:text-gray-500  hover:bg-gray-900 hover:text-gray-200 w-20 rounded-sm transition-all duration-200 ease-in-out "
+            className="flex items-start light:text-gray-400 text-gray-500 cursor-pointer py-2 px-2 mb-2 light:hover:bg-gray-100 light:hover:text-gray-500  hover:bg-gray-900/50 hover:text-gray-200 w-20 rounded-sm transition-all duration-200 ease-in-out "
           >
             <ArrowBackIosIcon className="scale-80" />
             Back
@@ -200,7 +229,13 @@ const MovieDetails = () => {
             />
 
             <div className="absolute z-2 pl-[8%] pt-[2%] sm:pl-15 sm:pt-10 md:pt-14 ">
-              <h1 className="text-2xl sm:text-4xl font-bold w-70 sm:w-80 text-left text-white">
+              <h1
+                className={`${
+                  movie.title.length > 20
+                    ? "w-80 text-md sm:w-120 "
+                    : "w-70 sm:w-80 "
+                } text-2xl sm:text-4xl font-bold text-left text-white drop-shadow-lg`}
+              >
                 {movie.title}
               </h1>
               <div className="flex items-center justify-start gap-[1px] -translate-x-1 sm:translate-x-4 sm:scale-110 sm:mt-1">
@@ -248,57 +283,61 @@ const MovieDetails = () => {
                 })}
               </h2>
 
-              <div className="flex mt-4">
-                <Tooltip
-                  title={
-                    isInWatchlist ? "Remove from Watchlist" : "Add to Watchlist"
-                  }
-                  placement="top"
-                >
-                  <IconButton
-                    onClick={handleToggleWatchlist}
-                    color={isInWatchlist ? "primary" : "default"}
+              <div className="mt-2 sm:-mt-3 md:mt-0 flex flex-row-reverse items-center justify-end sm:flex-col sm:items-start">
+                <div className="flex mt-2 sm:mt-4">
+                  <Tooltip
+                    title={
+                      isInWatchlist
+                        ? "Remove from Watchlist"
+                        : "Add to Watchlist"
+                    }
+                    placement="top"
                   >
-                    {isInWatchlist ? (
-                      <PlaylistAddCheckIcon />
-                    ) : (
-                      <PlaylistAddIcon className="text-white" />
-                    )}
-                  </IconButton>
-                </Tooltip>
+                    <IconButton
+                      onClick={handleToggleWatchlist}
+                      color={isInWatchlist ? "primary" : "default"}
+                    >
+                      {isInWatchlist ? (
+                        <PlaylistAddCheckIcon className="text-yellow-300" />
+                      ) : (
+                        <PlaylistAddIcon className="text-white" />
+                      )}
+                    </IconButton>
+                  </Tooltip>
 
-                {/* Favorite Button */}
-                <Tooltip
-                  title={
-                    isFavorite ? "Remove from Favorites" : "Add to Favorites"
-                  }
-                  placement="top"
-                >
-                  <IconButton
-                    onClick={handleToggleFavorite}
-                    color={isFavorite ? "error" : "default"}
+                  {/* Favorite Button */}
+                  <Tooltip
+                    title={
+                      isFavorite ? "Remove from Favorites" : "Add to Favorites"
+                    }
+                    placement="top"
                   >
-                    {isFavorite ? (
-                      <FavoriteIcon />
-                    ) : (
-                      <FavoriteBorderIcon className="text-white" />
-                    )}
-                  </IconButton>
-                </Tooltip>
+                    <IconButton
+                      onClick={handleToggleFavorite}
+                      color={isFavorite ? "error" : "default"}
+                    >
+                      {isFavorite ? (
+                        <FavoriteIcon />
+                      ) : (
+                        <FavoriteBorderIcon className="text-white" />
+                      )}
+                    </IconButton>
+                  </Tooltip>
+                </div>
+
+                <button
+                  onClick={() => handleBookTicket()}
+                  className="bg-[#FFD700] h-8 md:h-auto rounded-sm mt-1 lg:mt-2 w-24 sm:w-30 lg:w-40 text-xs sm:text-[14px]  text-black cursor-pointer font-semibold p-1 lg:py-2 md:text-md lg:text-[16px]  hover:shadow-lg shadow-yellow-500/50 transition-all duration-300 ease-in-out"
+                >
+                  Book Tickets
+                </button>
               </div>
-
-              <button
-                onClick={() => handleBookTicket()}
-                className="bg-[#FFD700] rounded-sm mt-1 lg:mt-2 w-24 sm:w-30 lg:w-40 text-xs sm:text-[14px]  text-black cursor-pointer font-semibold p-1 lg:py-2 md:text-md lg:text-[16px]  hover:shadow-lg shadow-yellow-500/50 transition-all duration-300 ease-in-out"
-              >
-                Book Tickets
-              </button>
             </div>
 
             <div className="group-hover:hidden bg-gradient-to-r from-black to-transparent absolute z-1 h-full w-90 sm:w-140 md:w-160"></div>
           </div>
 
-          <div className="px-5 mb-10">
+          <div className="px-2 sm:px-5 mb-10">
             <h1 className="font-bold text-left text-white light:text-black mt-20 text-xl md:text-2xl">
               Trailer
             </h1>
@@ -312,7 +351,7 @@ const MovieDetails = () => {
             />
           </div>
 
-          <div className="px-5  grid grid-cols-4">
+          <div className="px-2 sm:px-5  grid grid-cols-4">
             <div className="col-span-4 sm:col-span-3">
               <div>
                 <h1 className="font-bold text-left mt-20 text-xl md:text-2xl ">
@@ -336,9 +375,9 @@ const MovieDetails = () => {
                   <h1 className="font-bold text-left sm:text-xl md:text-2xl ">
                     Cast
                   </h1>
-                  <button className="text-gray-400 cursor-pointer hover:text-yellow-400 sm:mr-10">
+                  {/* <button className="text-gray-400 cursor-pointer hover:text-yellow-400 sm:mr-10">
                     view more
-                  </button>
+                  </button> */}
                 </div>
                 <div className="flex items-center justify-center sm:justify-start gap-10 mt-5 flex-wrap">
                   {movie.cast.slice(0, 10).map((cast: any) => (
@@ -366,9 +405,9 @@ const MovieDetails = () => {
                   <h1 className="font-bold text-left sm:text-xl md:text-2xl ">
                     Crew
                   </h1>
-                  <button className="text-gray-400 cursor-pointer hover:text-yellow-400 sm:mr-10">
+                  {/* <button className="text-gray-400 cursor-pointer hover:text-yellow-400 sm:mr-10">
                     view more
-                  </button>
+                  </button> */}
                 </div>
                 <div className="flex items-center justify-center sm:justify-start gap-10 mt-5 flex-wrap">
                   {movie.crew.slice(0, 6).map((cast: any) => (
@@ -397,7 +436,7 @@ const MovieDetails = () => {
             </div>
           </div>
 
-          <div className="px-5 ">
+          <div className="px-2 sm:px-5 ">
             <h1 className="font-bold text-left mt-20 text-xl md:text-2xl ">
               Critic Reviews
             </h1>
@@ -441,7 +480,7 @@ const MovieDetails = () => {
             </div>
           </div>
 
-          <div className="px-5">
+          <div className="px-2 sm:px-5">
             <SimilarMovies genre={movie.genre} title={movie.title} />
           </div>
         </div>
@@ -467,7 +506,7 @@ const MovieDetails = () => {
             />
           </div>
 
-          <div className="px-5 mb-10">
+          <div className="px-2 sm:px-5 mb-10">
             <div className="mt-20 w-20 h-9 flex-shrink-0 overflow-hidden  light:bg-gray-50 bg-gray-800/80">
               <Skeleton
                 animation="wave"
@@ -487,7 +526,7 @@ const MovieDetails = () => {
             </div>
           </div>
 
-          <div className="px-5  grid grid-cols-4">
+          <div className="px-2 sm:px-5  grid grid-cols-4">
             <div className="col-span-4 sm:col-span-3">
               <div>
                 <div className="mt-20 w-30 h-10 flex-shrink-0 overflow-hidden  light:bg-gray-50 bg-gray-800/80">
@@ -632,7 +671,7 @@ const MovieDetails = () => {
             </div>
           </div>
 
-          <div className="px-5 ">
+          <div className="px-2 sm:px-5 ">
             <div className="mt-20 w-33 h-10 flex-shrink-0 overflow-hidden  light:bg-gray-50 bg-gray-800/80">
               <Skeleton
                 animation="wave"

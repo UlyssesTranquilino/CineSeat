@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useUserStore } from "../../global/mode";
 import { QRCodeSVG } from "qrcode.react";
 import Modal from "@mui/material/Modal";
@@ -107,9 +109,22 @@ const ProfileTickets = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const navigate = useNavigate();
+  const handleBackClick = () => {
+    navigate(-1);
+  };
+
   return (
     <div>
-      <h1 className="font-semibold text-xl md:text-2xl text-left mt-7">
+      <div
+        onClick={handleBackClick}
+        className="flex items-start light:text-gray-400 text-gray-500 cursor-pointer py-2 pl-1 mt-1  light:hover:bg-gray-100 light:hover:text-gray-500  hover:bg-gray-900/50 hover:text-gray-200 w-20 rounded-sm transition-all duration-200 ease-in-out "
+      >
+        <ArrowBackIosIcon className="scale-80" />
+        Back
+      </div>
+
+      <h1 className="light:text-black font-semibold text-xl md:text-2xl text-left mt-7">
         My Tickets
       </h1>
 

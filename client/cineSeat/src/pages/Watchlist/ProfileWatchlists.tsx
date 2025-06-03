@@ -4,13 +4,13 @@ import { Rating } from "@mui/material";
 import { useUserStore } from "../../global/mode";
 
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import EmptyFavoriteImg from "../../assets/Empty Favorite.png";
+import EmptyWatchlistImg from "../../assets/Empty Watchlist.png";
 
-const ProfileFavorites = () => {
+const ProfileWatchlists = () => {
   const { currentUser } = useUserStore();
-  const movieFavorites = currentUser.favorites;
-
   const navigate = useNavigate();
+  const movieWatchlists = currentUser.watchlist;
+
   const handleBackClick = () => {
     navigate(-1);
   };
@@ -19,20 +19,20 @@ const ProfileFavorites = () => {
     <div className="px-3">
       <div
         onClick={handleBackClick}
-        className="flex items-start light:text-gray-400 text-gray-500 cursor-pointer py-2 mb-2 light:hover:bg-gray-100 light:hover:text-gray-500  hover:bg-gray-900/50 hover:text-gray-200 w-20 rounded-sm transition-all duration-200 ease-in-out "
+        className="flex items-start light:text-gray-400 text-gray-500 cursor-pointer py-2 pl-1 mt-1  light:hover:bg-gray-100 light:hover:text-gray-500  hover:bg-gray-900/50 hover:text-gray-200 w-20 rounded-sm transition-all duration-200 ease-in-out "
       >
         <ArrowBackIosIcon className="scale-80" />
         Back
       </div>
 
-      <h1 className="font-semibold light:text-black text-white text-xl md:text-2xl text-left mt-5">
-        My Favorites
+      <h1 className="font-semibold light:text-black text-white text-xl md:text-2xl text-left mt-4">
+        My Watchlists
       </h1>
 
       {/* Movie Grid */}
-      {movieFavorites.length > 0 ? (
+      {movieWatchlists.length > 0 ? (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-7 rounded-sm mt-10">
-          {movieFavorites.map((movie: any) => (
+          {movieWatchlists.map((movie: any) => (
             <Link to={`/movie/${movie._id}`} key={movie._id}>
               <div className="mb-10 rounded-sm overflow-hidden bg-black relative h-full cursor-pointer hover:opacity-80 hover:scale-105  transition-all duration-300 group">
                 <div className="overflow-hidden">
@@ -77,18 +77,19 @@ const ProfileFavorites = () => {
           ))}
         </div>
       ) : (
-        <div className="mt-10">
+        <div className="mt-5">
           <img
-            src={EmptyFavoriteImg}
+            src={EmptyWatchlistImg}
             alt="Empty Favorite"
-            className="light:opacity-50 opacity-90 w-60 md:w-70 mx-auto"
+            className="light:opacity-50 opacity-90 w-65 md:w-75 mx-auto"
           />
-          <div className="mt-3 mb-15">
+          <div className="mt-2 mb-15">
             <h1 className="text-2xl mg:text-4xl font-semibold light:text-black ">
-              No Favorites Yet
+              No Watchlists Yet
             </h1>
             <p className="light:text-gray-600 px-10 text-gray-200 mt-3 md:text-lg">
-              You can add a movie to your favorites by clicking the "Heart Icon"
+              You can add a movie to your watchlists by clicking the "Add to
+              Watchlist" Icon
             </p>
           </div>
           <Link
@@ -103,4 +104,4 @@ const ProfileFavorites = () => {
   );
 };
 
-export default ProfileFavorites;
+export default ProfileWatchlists;

@@ -17,6 +17,8 @@ import Payment from "./pages/Payment";
 import Confirmation from "./pages/Confirmation";
 import ProfileTickets from "./pages/Tickets/ProfileTickets";
 import ProfileFavorites from "./pages/Favorites/ProfileFavorites";
+import ProfileWatchlists from "./pages/Watchlist/ProfileWatchlists";
+
 import { useTheme } from "./global/mode";
 
 import BookTickets from "./pages/BookTickets";
@@ -62,6 +64,7 @@ function App() {
           <Route path="/movie/confirmation/:id" element={<Confirmation />} />
           <Route path="/tickets" element={<ProfileTickets />} />
           <Route path="/favorites" element={<ProfileFavorites />} />
+          <Route path="/watchlists" element={<ProfileWatchlists />} />
           Add 404
         </Routes>
       </div>

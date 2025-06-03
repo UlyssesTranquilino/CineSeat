@@ -44,7 +44,7 @@ const tabs = [
   },
   {
     label: "Watchlist",
-    route: "/watchlist",
+    route: "/watchlists",
     icon: <VisibilityOutlinedIcon />,
   },
   {

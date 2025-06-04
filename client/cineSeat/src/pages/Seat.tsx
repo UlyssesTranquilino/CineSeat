@@ -30,7 +30,6 @@ const Seat = () => {
 
   const fetchTakenSeats = async () => {
     try {
-      console.log("State: ", state);
       const showtimeId = `${state.id}-${state.theaterName.replace(
         /\s+/g,
         ""

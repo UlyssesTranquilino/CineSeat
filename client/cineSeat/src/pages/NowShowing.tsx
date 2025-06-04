@@ -27,7 +27,6 @@ const NowShowing = () => {
 
   useEffect(() => {
     // Fetch new movie data based on ID change
-    console.log("Fetching movie for ID:", id);
   }, [id]); // 👈 Watch for ID changes
 
   const settings = {
@@ -61,12 +60,25 @@ const NowShowing = () => {
 
   const [activeGenre, setActiveGenre] = useState("All");
 
+  // Shuffle List
+  const shuffleArray = (array: []) => {
+    return array
+      .map((item) => ({ item, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ item }) => item);
+  };
+
   // Memoize filtered movies
   const filteredMovies = useMemo(() => {
-    if (activeGenre === "All") return movies.slice(6, 80);
-    return movies
-      .slice(6, 80)
-      .filter((movie: any) => movie.genre.includes(activeGenre));
+    const sliced = movies.slice(6, 80);
+
+    if (activeGenre === "All") return shuffleArray(sliced);
+
+    const filtered = sliced.filter((movie: any) =>
+      movie.genre.includes(activeGenre)
+    );
+
+    return shuffleArray(filtered);
   }, [movies, activeGenre]);
 
   return (

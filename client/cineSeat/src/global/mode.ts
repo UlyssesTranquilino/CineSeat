@@ -66,8 +66,6 @@ export const useMovieStore = create(
           const res = await fetch("http://localhost:5000/api/movies");
           const data = await res.json();
 
-          console.log("RES: ", res);
-
           set({ movies: data.data, lastFetched: Date.now() });
         } catch (error) {
           console.error("Failed to fetch movies: ", error);
@@ -90,6 +88,7 @@ export const useUserStore = create(
     (
       set: any,
       get: () => {
+        currentUser: any;
         isLoading: any;
       }
     ) => ({
@@ -113,8 +112,6 @@ export const useUserStore = create(
       ) => {
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
-
-        console.log(email, password);
 
         if (!password || !email) {
           return { success: false, message: "Please fill in all fields." };
@@ -144,8 +141,6 @@ export const useUserStore = create(
           });
 
           clearTimeout(timeoutId); // Clear the timeout if request completes
-
-          console.log("RES: ", res);
 
           const token = res.data.token;
           const user = res.data.user;
@@ -235,8 +230,6 @@ export const useUserStore = create(
             throw new Error("Invalid response from server");
           }
 
-          console.log("RES: ", res);
-
           localStorage.setItem("token", token);
           set({
             currentUser: res.data.user,
@@ -264,6 +257,90 @@ export const useUserStore = create(
             isLoading: false,
             error: "Failed to login. Please check your credentials.",
           });
+        }
+      },
+
+      // Edit User Profile
+      updateUser: async (
+        previousState: string | undefined,
+        formData: FormData
+      ) => {
+        const name = formData.get("name") as string;
+        const email = formData.get("email") as string;
+        const currentPassword = formData.get("currentPassword") as string;
+        const newPassword = formData.get("newPassword") as string;
+        const confirmPassword = formData.get("confirmPassword") as string;
+
+        if (
+          !currentPassword ||
+          !name ||
+          !newPassword ||
+          !confirmPassword ||
+          !email
+        ) {
+          return { success: false, message: "Please fill in all fields." };
+        }
+
+        if (newPassword != confirmPassword) {
+          return { success: false, message: "New Password does not match." };
+        }
+
+        // set({
+        //   isLoading: true,
+        //   error: null,
+        //   currentUser: null,
+        // });
+
+        // Add a timeout to prevent infinite loading
+        const timeoutId = setTimeout(() => {
+          if (useUserStore.getState().isLoading) {
+            set({
+              isLoading: false,
+              error: "Request timed out. Please try again.",
+            });
+          }
+          // 10 second timeout
+        }, 10000);
+
+        try {
+          const userId = useUserStore.getState().currentUser?._id;
+
+          const response = await axios.put(
+            `http://localhost:5000/api/user/${userId}`,
+            {
+              name,
+              email,
+              currentPassword,
+              newPassword,
+              confirmNewPassword: confirmPassword,
+            }
+          );
+
+          clearTimeout(timeoutId);
+
+          set({
+            isLoading: false,
+            currentUser: response.data.user,
+            error: null,
+          });
+
+          return {
+            success: true,
+            message: response.data.message || "User updated.",
+          };
+        } catch (error: any) {
+          clearTimeout(timeoutId);
+
+          const message =
+            error.response?.data?.message ||
+            "Something went wrong during update.";
+
+          set({
+            isLoading: false,
+            error: message,
+          });
+
+          return { success: false, message };
         }
       },
 
@@ -296,8 +373,6 @@ export const useUserStore = create(
             }
           );
 
-          console.log("✅ Booking Successful:", response.data);
-
           const updatedUser = response.data.user;
 
           // Update user in store if available
@@ -314,7 +389,6 @@ export const useUserStore = create(
             "Booking failed. Please try again.";
 
           console.error("❌ Booking Failed:", message);
-          console.log("Raw error object:", error);
 
           // Optional: Notify user via toast/snackbar here
 
@@ -391,7 +465,6 @@ export const useUserStore = create(
       // Remove to User Favorites
       removeToFavorites: async (currentUser: any, movieId: any) => {
         try {
-          console.log("CURRENT USER: ", currentUser);
           const response = await axios.delete(
             `http://localhost:5000/api/user/${currentUser._id}/favorites`,
             {

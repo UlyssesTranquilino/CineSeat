@@ -97,15 +97,48 @@ const UserController = {
   // Update user
   updateUser: async (req: any, res: any) => {
     try {
-      const { name, email } = req.body;
+      const { name, email, currentPassword, newPassword, confirmNewPassword } =
+        req.body;
 
-      const user = await User.findByIdAndUpdate(
-        req.params.id,
-        { name, email },
-        { new: true }
-      ).select("-password");
+      const { id } = req.params;
 
-      res.status(200).json(user);
+      const currentUser = await User.findById(id);
+
+      if (!currentUser)
+        return res.status(404).json({ message: "User not found." });
+
+      // Changing password
+      // Check if current password
+      if (currentPassword || newPassword || confirmNewPassword) {
+        const isMatch = await bcrypt.compare(
+          currentPassword,
+          currentUser.password
+        );
+        if (!isMatch) {
+          return res
+            .status(400)
+            .json({ message: "Current password is incorrect." });
+        }
+
+        if (newPassword !== confirmNewPassword) {
+          return res
+            .status(400)
+            .json({ message: "New passwords do not match" });
+        }
+
+        currentUser.password = await bcrypt.hash(newPassword, 10);
+      }
+
+      if (name) currentUser.name = name;
+      if (email) currentUser.email = email;
+
+      await currentUser.save();
+
+      const { password: _, ...safeUser } = currentUser.toObject();
+
+      res
+        .status(200)
+        .json({ message: "User updated successfully", user: safeUser });
     } catch (err) {
       res.status(500).json({ error: (err as Error).message });
     }
@@ -119,8 +152,6 @@ const UserController = {
 
       if (!user) return res.status(404).json({ message: "User not found." });
 
-      console.log(movieData);
-
       const movieAlreadyInFavorites = user.favorites.some(
         (favMovie) => favMovie._id === movieData._id
       );
@@ -129,7 +160,7 @@ const UserController = {
         user.favorites.push(movieData);
         await user.save();
       } else {
-        console.log("already in");
+        throw new Error("Movie is already in the favorites.");
       }
 
       res.status(200).json({
@@ -146,14 +177,23 @@ const UserController = {
   removeFavorite: async (req: any, res: any) => {
     try {
       const { movieId } = req.body;
-      const user = await User.findById(req.params.id);
+      const { id } = req.params;
 
-      if (!user) return res.status(404).json({ message: "User not found." });
+      const updatedUser = await User.findByIdAndUpdate(
+        id,
+        { $pull: { favorites: { _id: movieId } } },
+        { new: true }
+      );
 
-      user.favorites.pull({ _id: movieId });
-      await user.save();
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
 
-      res.status(200).json(user.favorites);
+      res.status(200).json({
+        message: "Movie removed from favorites",
+        favorites: updatedUser.favorites,
+        user: updatedUser,
+      });
     } catch (err) {
       res.status(500).json({ error: (err as Error).message });
     }
@@ -163,8 +203,6 @@ const UserController = {
   bookTicket: async (req: any, res: any) => {
     try {
       const user = await User.findById(req.params.id);
-
-      console.log("USER: ", req.params.id);
 
       if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -240,6 +278,60 @@ const UserController = {
     } catch (error) {
       console.error("Error fetching taken seats:", error);
       return res.status(500).json({ error: "Failed to fetch taken seats." });
+    }
+  },
+
+  // Add Watchlist
+  addWatchlist: async (req: any, res: any) => {
+    try {
+      const { movieData } = req.body;
+      const user = await User.findById(req.params.id);
+
+      if (!user) return res.status(404).json({ message: "User not found." });
+
+      const movieAlreadyInWatchlist = user.watchlist.some(
+        (favMovie) => favMovie._id === movieData._id
+      );
+
+      if (!movieAlreadyInWatchlist) {
+        user.watchlist.push(movieData);
+        await user.save();
+      } else {
+        throw new Error("Movie is already in the watchlists.");
+      }
+
+      res.status(200).json({
+        message: "Added to Favorites!",
+        watchlist: user.watchlist,
+        user,
+      });
+    } catch (err) {
+      res.status(500).json({ error: (err as Error).message });
+    }
+  },
+  // Remove favorite movie
+  removeWatchlist: async (req: any, res: any) => {
+    try {
+      const { movieId } = req.body;
+      const { id } = req.params;
+
+      const updatedUser = await User.findByIdAndUpdate(
+        id,
+        { $pull: { watchlist: { _id: movieId } } },
+        { new: true }
+      );
+
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      res.status(200).json({
+        message: "Movie removed from favorites",
+        watchlist: updatedUser.watchlist,
+        user: updatedUser,
+      });
+    } catch (err) {
+      res.status(500).json({ error: (err as Error).message });
     }
   },
 

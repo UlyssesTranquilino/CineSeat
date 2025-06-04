@@ -169,10 +169,6 @@ const addReviewCount = async () => {
         { _id: movie._id },
         { $set: { "rating.reviewsCount": randomReview } } // Update the reviewsCount only
       );
-
-      console.log(
-        `✅ Updated review count for "${movie.title}" to ${randomReview}`
-      );
     }
 
     console.log("Review counts updated for all movies.");
@@ -389,8 +385,6 @@ const addMovieDatabaseID = async () => {
             },
           }
         );
-
-        console.log(`✅ Cast & Crew updated for "${movie.title}"`);
       } catch (err) {
         console.error(
           `❌ Error updating cast & crew for "${movie.title}":`,

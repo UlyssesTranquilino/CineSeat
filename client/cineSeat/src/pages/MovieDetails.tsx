@@ -47,14 +47,12 @@ const MovieDetails = () => {
     currentUser.watchlist.some((movie: any) => movie._id === id)
   );
 
-  console.log("is Favorites: ", isFavorite);
-
   const fetchMovieDetails = async (id: string) => {
     const res = await fetch(`http://localhost:5000/api/movies/${id}`);
 
     const { data, success } = await res.json();
     setIsSuccess(success);
-    console.log(data);
+
     setMovie(data);
   };
 
@@ -128,7 +126,7 @@ const MovieDetails = () => {
   const handleToggleFavorite = async () => {
     try {
       let res;
-      console.log("CURRENT USER: ", currentUser);
+
       if (!isFavorite) {
         res = await addToFavorites(currentUser, movie);
         toastNotif("Added to Favorites!", false);
@@ -138,11 +136,8 @@ const MovieDetails = () => {
       }
 
       setIsFavorite(!isFavorite);
-
-      console.log("RES: ", res);
     } catch (error: any) {
       toastNotif(error.message, false);
-      console.log(error);
     }
   };
 

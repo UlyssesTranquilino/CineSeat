@@ -13,8 +13,13 @@ router.get("/:id", UserController.getUserById);
 
 router.put("/:id", UserController.updateUser);
 
+// Favorites
 router.post("/:id/favorites", UserController.addFavorite);
 router.delete("/:id/favorites", UserController.removeFavorite);
+
+// Watchlist
+router.post("/:id/watchlists", UserController.addWatchlist);
+router.delete("/:id/watchlists", UserController.removeWatchlist);
 
 router.delete("/", UserController.deleteAllUsers);
 

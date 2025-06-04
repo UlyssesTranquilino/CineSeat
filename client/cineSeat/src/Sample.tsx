@@ -31,7 +31,6 @@ const Sample = () => {
 export default Sample;
 
 function slowFunction(num) {
-  console.log("slowFunction called");
   for (let i = 0; i < 10000000; i++) {}
   return num * 2;
 }

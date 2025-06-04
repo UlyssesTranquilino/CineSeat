@@ -18,6 +18,8 @@ import Confirmation from "./pages/Confirmation";
 import ProfileTickets from "./pages/Tickets/ProfileTickets";
 import ProfileFavorites from "./pages/Favorites/ProfileFavorites";
 import ProfileWatchlists from "./pages/Watchlist/ProfileWatchlists";
+import ProfilePage from "./pages/Profile/ProfilePage";
+import Error from "./pages/Error";
 
 import { useTheme } from "./global/mode";
 
@@ -65,7 +67,8 @@ function App() {
           <Route path="/tickets" element={<ProfileTickets />} />
           <Route path="/favorites" element={<ProfileFavorites />} />
           <Route path="/watchlists" element={<ProfileWatchlists />} />
-          Add 404
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="*" element={<Error />} />
         </Routes>
       </div>
       {/* {isDarkMode && <CircleGradient />} */}

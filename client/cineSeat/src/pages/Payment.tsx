@@ -36,8 +36,6 @@ const Payment: React.FC = () => {
   const location = useLocation();
   const state = location.state as PaymentLocationState | undefined;
 
-  console.log("state: ", state);
-
   const [paymentMethod, setPaymentMethod] = useState("credit_card");
   // Controlled inputs for card details
   const [cardNumber, setCardNumber] = useState("");
@@ -197,17 +195,11 @@ const Payment: React.FC = () => {
         paypalContainer.innerHTML = ""; // Clear previous
         if (window.paypal && typeof window.paypal.Buttons === "function") {
           // This part would run if the PayPal SDK was actually loaded and configured
-          console.log(
-            "PayPal SDK detected, attempting to render buttons (sample)..."
-          );
+
           try {
             window.paypal
               .Buttons({
                 createOrder: (data: any, actions: any) => {
-                  console.log(
-                    "Sample PayPal createOrder for amount:",
-                    state.totalPrice.toFixed(2)
-                  );
                   return actions.order.create({
                     purchase_units: [
                       {
@@ -222,9 +214,8 @@ const Payment: React.FC = () => {
                   });
                 },
                 onApprove: async (data: any, actions: any) => {
-                  console.log("Sample PayPal onApprove:", data);
                   const orderDetails = await actions.order.capture();
-                  console.log("Sample PayPal Capture result", orderDetails);
+
                   await simulatePaymentAndNavigate("PayPal (Approved via SDK)");
                 },
                 onError: (err: any) => {
@@ -250,9 +241,7 @@ const Payment: React.FC = () => {
           }
         } else {
           // Fallback if PayPal SDK is not loaded (most likely for this sample)
-          console.log(
-            "PayPal SDK not found, rendering placeholder button for PayPal (sample)."
-          );
+
           const placeholderButton = document.createElement("button");
           placeholderButton.innerHTML = `Proceed with PayPal (Sample - ₱${state.totalPrice.toFixed(
             2

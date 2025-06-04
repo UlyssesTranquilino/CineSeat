@@ -18,6 +18,7 @@
     "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.10.1",
+    "@types/passport": "^1.0.17",
     "@types/validator": "^13.12.2",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
@@ -33,6 +34,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.13.1",
     "mongoose": "^8.11.0",
+    "passport": "^0.7.0",
     "react-hot": "^0.0.1",
     "toast": "^0.5.4",
     "validator": "^13.12.0"

@@ -48,7 +48,9 @@ const MovieDetails = () => {
   );
 
   const fetchMovieDetails = async (id: string) => {
-    const res = await fetch(`http://localhost:5000/api/movies/${id}`);
+    const res = await fetch(
+      `http://https://cineseatbackend.onrender.com/api/movies/${id}`
+    );
 
     const { data, success } = await res.json();
     setIsSuccess(success);

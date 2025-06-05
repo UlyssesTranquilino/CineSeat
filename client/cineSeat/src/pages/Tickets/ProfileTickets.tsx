@@ -130,7 +130,7 @@ const ProfileTickets = () => {
 
       <Modal open={open} onClose={handleClose}>
         <div className="w-72 sm:w-100 mx-auto py-10 ">
-          <div className="overflow-y-scroll  custom-scrollbar bg-gray-900 light:bg-gray-100  h-[90vh] pt-65 sm:pt-50 pb-5  flex items-center justify-center rounded-md">
+          <div className="overflow-y-scroll  custom-scrollbar bg-gray-900 light:bg-gray-100  h-[90vh] pt-55 sm:pt-50 pb-5  flex items-center justify-center rounded-md">
             {activeTicket && TicketSummary(activeTicket)}
           </div>
         </div>

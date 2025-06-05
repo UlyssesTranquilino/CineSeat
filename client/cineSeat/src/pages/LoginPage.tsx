@@ -17,7 +17,7 @@ const LoginPage = () => {
   }, [errorMessage, isPending, navigate]);
 
   return (
-    <div className="p-5 sm:p-10 rounded-sm bg-[#1A1A1A] light:bg-gray-100 w-fuil text-white light:text-black mt-15 max-w-[500px] mx-auto">
+    <div className="p-5  sm:p-10 rounded-sm bg-[#1A1A1A] light:bg-gray-100 w-fuil text-white light:text-black mt-15  max-w-[500px] mx-auto">
       <h2 className="text-center text-xl font-semibold md:text-2xl ">Log in</h2>
       <form action={formAction} className="mt-5 flex flex-col gap-2">
         <div className="mb-3">

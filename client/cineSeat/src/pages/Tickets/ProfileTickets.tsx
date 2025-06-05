@@ -32,7 +32,7 @@ const ProfileTickets = () => {
     const ticketDate = { day: formatTicketDate() };
 
     return (
-      <div className="w-full h-200 text-center  flex-[2] lg:flex-[1.5] xl:flex-[1] md:sticky md:top-6 bg-gray-900 light:bg-gray-100 p-4 sm:p-6 rounded-lg shadow-xl mb-6 md:mb-0">
+      <div className="w-full max-w-72  h-200 text-center  flex-[2] lg:flex-[1.5] xl:flex-[1] md:sticky md:top-6 bg-gray-900 light:bg-gray-100 p-4 sm:p-6 rounded-lg shadow-xl mb-6 md:mb-0">
         <h2 className="text-xl font-bold mb-4 text-white light:text-black">
           {ticketData.movieDetails.title}
         </h2>
@@ -129,8 +129,10 @@ const ProfileTickets = () => {
       </h1>
 
       <Modal open={open} onClose={handleClose}>
-        <div className="w-100 mx-auto mt-10">
-          <div>{activeTicket && TicketSummary(activeTicket)}</div>
+        <div className="w-100 mx-auto  py-10">
+          <div className="overflow-y-scroll  custom-scrollbar bg-gray-900 light:bg-gray-100  h-[90vh] pt-50 pb-5  flex items-center justify-center">
+            {activeTicket && TicketSummary(activeTicket)}
+          </div>
         </div>
       </Modal>
 

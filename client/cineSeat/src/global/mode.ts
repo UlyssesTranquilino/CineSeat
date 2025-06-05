@@ -63,7 +63,9 @@ export const useMovieStore = create(
         if (Date.now() - get().lastFetched < TEN_MINUTES) return; // Avoid frequent fetching
 
         try {
-          const res = await fetch("http://localhost:5000/api/movies");
+          const res = await fetch(
+            "http://https://cineseatbackend.onrender.com/api/movies"
+          );
           const data = await res.json();
 
           set({ movies: data.data, lastFetched: Date.now() });
@@ -135,10 +137,13 @@ export const useUserStore = create(
         }, 10000);
 
         try {
-          const res = await axios.post(`http://localhost:5000/api/user/login`, {
-            email,
-            password,
-          });
+          const res = await axios.post(
+            `http://https://cineseatbackend.onrender.com/api/user/login`,
+            {
+              email,
+              password,
+            }
+          );
 
           clearTimeout(timeoutId); // Clear the timeout if request completes
 
@@ -214,7 +219,7 @@ export const useUserStore = create(
 
         try {
           const res = await axios.post(
-            `http://localhost:5000/api/user/register`,
+            `http://https://cineseatbackend.onrender.com/api/user/register`,
             {
               name,
               email,
@@ -306,7 +311,7 @@ export const useUserStore = create(
           const userId = useUserStore.getState().currentUser?._id;
 
           const response = await axios.put(
-            `http://localhost:5000/api/user/${userId}`,
+            `http://https://cineseatbackend.onrender.com/api/user/${userId}`,
             {
               name,
               email,
@@ -366,7 +371,7 @@ export const useUserStore = create(
       ) => {
         try {
           const response = await axios.post(
-            `http://localhost:5000/api/user/${currentUser._id}/book/ticket`,
+            `http://https://cineseatbackend.onrender.com/api/user/${currentUser._id}/book/ticket`,
             {
               movieDetails,
               bookingDetails,
@@ -400,7 +405,7 @@ export const useUserStore = create(
       getTakenSeats: async (showtimeId: string) => {
         try {
           const response = await axios.get(
-            `http://localhost:5000/api/user/showtime/${showtimeId}/seats`
+            `http://https://cineseatbackend.onrender.com/api/user/showtime/${showtimeId}/seats`
           );
 
           return response.data.takenSeats;
@@ -428,7 +433,7 @@ export const useUserStore = create(
           } = movieData;
 
           const response = await axios.post(
-            `http://localhost:5000/api/user/${currentUser._id}/favorites`,
+            `http://https://cineseatbackend.onrender.com/api/user/${currentUser._id}/favorites`,
             {
               movieData: {
                 _id,
@@ -466,7 +471,7 @@ export const useUserStore = create(
       removeToFavorites: async (currentUser: any, movieId: any) => {
         try {
           const response = await axios.delete(
-            `http://localhost:5000/api/user/${currentUser._id}/favorites`,
+            `http://https://cineseatbackend.onrender.com/api/user/${currentUser._id}/favorites`,
             {
               data: { movieId },
             }
@@ -504,7 +509,7 @@ export const useUserStore = create(
           } = movieData;
 
           const response = await axios.post(
-            `http://localhost:5000/api/user/${currentUser._id}/watchlists`,
+            `http://https://cineseatbackend.onrender.com/api/user/${currentUser._id}/watchlists`,
             {
               movieData: {
                 _id,
@@ -542,7 +547,7 @@ export const useUserStore = create(
       removeToWatchlists: async (currentUser: any, movieId: any) => {
         try {
           const response = await axios.delete(
-            `http://localhost:5000/api/user/${currentUser._id}/watchlists`,
+            `http://https://cineseatbackend.onrender.com/api/user/${currentUser._id}/watchlists`,
             {
               data: { movieId },
             }

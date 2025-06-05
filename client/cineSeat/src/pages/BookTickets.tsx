@@ -17,7 +17,7 @@ const BookTickets = () => {
 
   const fetchMovieDetails = async (id: string) => {
     const res = await fetch(
-      `http://https://cineseatbackend.onrender.com/api/movies/${id}`
+      `https://cineseatbackend.onrender.com/api/movies/${id}`
     );
 
     const { data, success } = await res.json();

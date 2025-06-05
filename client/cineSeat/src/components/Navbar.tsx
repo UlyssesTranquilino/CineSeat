@@ -248,9 +248,11 @@ const Navbar = () => {
           )}
         </div>
 
-        <Link to="/profile" className="cursor-pointer hover:text-red-500/90">
-          <AccountCircleOutlinedIcon />
-        </Link>
+        {currentUser && (
+          <Link to="/profile" className="cursor-pointer hover:text-red-500/90">
+            <AccountCircleOutlinedIcon />
+          </Link>
+        )}
 
         <IconButton onClick={handleDesktopDrawerToggle}>
           <MenuIcon className="text-white light:text-black" />
@@ -287,7 +289,7 @@ const Navbar = () => {
               </div>
             )}
 
-            {!isAuthRoute && (
+            {!isAuthRoute && currentUser && (
               <div className="flex flex-col  gap-3 w-full px-3 ">
                 {tabs.map((tab) => (
                   <Link
@@ -362,7 +364,7 @@ const Navbar = () => {
             </div>
           )}
 
-          {!isAuthRoute && (
+          {!isAuthRoute && currentUser && (
             <div className="flex flex-col  gap-3 w-full px-3 ">
               {tabs.map((tab) => (
                 <Link

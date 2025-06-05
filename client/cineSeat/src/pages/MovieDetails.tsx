@@ -40,16 +40,16 @@ const MovieDetails = () => {
   const [isSuccess, setIsSuccess] = useState(false);
 
   const [isFavorite, setIsFavorite] = useState(
-    currentUser.favorites.some((fav: any) => fav._id === id)
+    currentUser?.favorites?.some((fav: any) => fav._id === id) || false
   );
 
   const [isInWatchlist, setIsInWatchlist] = useState(
-    currentUser.watchlist.some((movie: any) => movie._id === id)
+    currentUser?.watchlist?.some((movie: any) => movie._id === id) || false
   );
 
   const fetchMovieDetails = async (id: string) => {
     const res = await fetch(
-      `http://https://cineseatbackend.onrender.com/api/movies/${id}`
+      `https://cineseatbackend.onrender.com/api/movies/${id}`
     );
 
     const { data, success } = await res.json();
@@ -68,9 +68,11 @@ const MovieDetails = () => {
       fetchMovieDetails(id);
     }
 
-    setIsFavorite(currentUser.favorites.some((fav: any) => fav._id === id));
+    setIsFavorite(
+      currentUser?.favorites?.some((fav: any) => fav._id === id) || false
+    );
     setIsInWatchlist(
-      currentUser.watchlist.some((movie: any) => movie._id === id)
+      currentUser?.watchlist?.some((movie: any) => movie._id === id) || false
     );
   }, [id]);
 
@@ -126,6 +128,7 @@ const MovieDetails = () => {
   };
 
   const handleToggleFavorite = async () => {
+    if (!currentUser) navigate("/login");
     try {
       let res;
 
@@ -144,6 +147,7 @@ const MovieDetails = () => {
   };
 
   const handleToggleWatchlist = async () => {
+    if (!currentUser) navigate("/login");
     try {
       let res;
 
